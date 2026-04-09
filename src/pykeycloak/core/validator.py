@@ -1,9 +1,5 @@
-from collections.abc import Callable
-from functools import wraps
 from http import HTTPStatus
-from typing import TYPE_CHECKING, Any
-
-from pykeycloak.core.response import KeycloakResponse, KeycloakResponseBuilder
+from typing import TYPE_CHECKING
 
 from ..core.exceptions import (
     KeycloakBadRequestError,
@@ -49,19 +45,6 @@ class KeycloakResponseValidator:
             status_code=status,
             content=response.content,
         )
-
-
-_builder = KeycloakResponseBuilder()
-
-
-def validate_api_response(method: Callable[..., Any]) -> Callable[..., Any]:
-    @wraps(method)
-    async def wrapper(self: Any, *args: Any, **kwargs: Any) -> KeycloakResponse:
-        response = await method(self, *args, **kwargs)
-        self._validator.validate(response)
-        return _builder.build_response(response)
-
-    return wrapper
 
 
 if TYPE_CHECKING:
