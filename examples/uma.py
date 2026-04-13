@@ -15,6 +15,17 @@ async def main():
         payload=get_user_credentials()
     )
 
+    res = await keycloak.uma.get_uma_permissions_async(
+        payload=UMAAuthorizationPayload(
+            audience=None,
+            permissions=["/otago/roles#update", "/otago/users#update"],
+            subject_token=result.access_token,
+            response_mode=UrnIetfOauthUmaTicketResponseModeEnum.PERMISSIONS,
+        )
+    )
+
+    print(res)
+
     res = await keycloak.uma.get_permissions_by_uris_chunks_async(
         payload=UMAAuthorizationPayload(
             audience=None,
