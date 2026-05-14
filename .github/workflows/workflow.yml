@@ -296,23 +296,12 @@ jobs:
       - name: Strip non-package files before PyPI upload
         run: find dist -mindepth 1 -maxdepth 1 ! -name '*.whl' ! -name '*.tar.gz' -delete
 
-      - name: Debug static credential env presence
-        shell: bash
-        run: |
-          set -euo pipefail
-          for v in TWINE_USERNAME TWINE_PASSWORD TWINE_REPOSITORY_URL TWINE_REPOSITORY PYPI_API_TOKEN UV_PUBLISH_TOKEN UV_PUBLISH_USERNAME UV_PUBLISH_PASSWORD; do
-            if [[ -n "${!v:-}" ]]; then
-              echo "$v=SET"
-            else
-              echo "$v=EMPTY"
-            fi
-          done
-
       - name: Upload to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           packages-dir: dist
-          token: ${{ github.token }}
+          user: __token__
+          password: ${{ secrets.PYPI_API_TOKEN }}
 
 
       - name: Clean up
