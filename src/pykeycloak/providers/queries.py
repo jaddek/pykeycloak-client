@@ -96,7 +96,7 @@ class GetUsersCountQuery(SearchQuery):
 @dataclass(kw_only=True, slots=True)
 class GetUsersQuery(SearchQuery, PaginationQuery):
     def __post_init__(self) -> None:
-        super().__post_init__()
+        PaginationQuery.__post_init__(self)
 
         max_users_per_query = getenv_int(
             "KEYCLOAK_MAX_ROWS_QUERY_LIMIT", KEYCLOAK_MAX_ROWS_QUERY_LIMIT_DEFAULT
