@@ -1,0 +1,7 @@
+# Security/release critical paths
+/.github/workflows/* @tonynazarov
+/pyproject.toml @tonynazarov
+/uv.lock @tonynazarov
+/bin/* @tonynazarov
+/Makefile @tonynazarov
+/CHANGELOG.md @tonynazarov

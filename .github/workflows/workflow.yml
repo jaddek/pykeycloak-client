@@ -9,6 +9,13 @@ on:
       - 'dev'
       - 'feature/*'
       - 'hotfix/*'
+  workflow_dispatch:
+    inputs:
+      run_integration_matrix:
+        description: "Run Keycloak compatibility matrix"
+        required: false
+        type: boolean
+        default: false
 
 jobs:
   checks:
@@ -19,6 +26,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Sync package version from release tag
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: make release-bump
 
       - name: Install uv
         uses: astral-sh/setup-uv@v5
@@ -47,12 +58,33 @@ jobs:
       - name: Run Pytests
         run: uv run pytest -q
 
+      - name: Audit Python dependencies for known CVEs
+        run: |
+          uv export --frozen --format requirements.txt --all-groups --no-emit-project -o /tmp/requirements-audit.txt
+          uv run pip-audit --strict --requirement /tmp/requirements-audit.txt --no-deps
+
+      - name: Run Trivy security scan (vulns, secrets, misconfig)
+        uses: aquasecurity/trivy-action@0.24.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          format: table
+          exit-code: '1'
+          ignore-unfixed: true
+          severity: CRITICAL,HIGH
+          scanners: vuln,secret,misconfig
+
   build:
     runs-on: ubuntu-latest
     needs: checks
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Sync package version from release tag
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: make release-bump
+
       - name: Install uv
         uses: astral-sh/setup-uv@v5
         with:
@@ -66,11 +98,196 @@ jobs:
       - name: Build the project
         run: uv build
 
+      - name: Generate SBOM (CycloneDX JSON)
+        run: uvx cyclonedx-py environment --output-format JSON --output-file dist/sbom.cyclonedx.json
+
+      - name: Enforce SBOM license policy
+        run: python bin/check_sbom_licenses.py --sbom dist/sbom.cyclonedx.json --policy .license-policy.toml
+
       - name: Upload built artifacts
         uses: actions/upload-artifact@v4
         with:
           name: package
           path: dist/*
+
+  integration-keycloak-matrix:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' && inputs.run_integration_matrix
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.12"]
+        keycloak-version: ["24.0", "25.0", "26.0"]
+    services:
+      keycloak:
+        image: quay.io/keycloak/keycloak:${{ matrix.keycloak-version }}
+        ports:
+          - 8080:8080
+        env:
+          KC_BOOTSTRAP_ADMIN_USERNAME: admin
+          KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+        options: >-
+          --health-cmd="bash -c 'exec 3<>/dev/tcp/127.0.0.1/8080'"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=20
+        command: ["start-dev"]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: "0.9.22"
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install the project
+        run: uv sync --dev
+
+      - name: Wait for Keycloak
+        run: |
+          for i in $(seq 1 60); do
+            if curl -fsS "http://127.0.0.1:8080/realms/master/.well-known/openid-configuration" >/dev/null; then
+              echo "Keycloak is ready"
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "Keycloak did not become ready in time"
+          exit 1
+
+      - name: Provision test client and export integration env
+        run: |
+          python - <<'PY'
+          import json
+          import urllib.error
+          import urllib.parse
+          import urllib.request
+
+          base = "http://127.0.0.1:8080"
+          realm = "master"
+          admin_user = "admin"
+          admin_pass = "admin"
+          client_id = "pykeycloak-it-client"
+          client_secret = "pykeycloak-it-secret"
+
+          token_req = urllib.request.Request(
+              f"{base}/realms/master/protocol/openid-connect/token",
+              data=urllib.parse.urlencode(
+                  {
+                      "grant_type": "password",
+                      "client_id": "admin-cli",
+                      "username": admin_user,
+                      "password": admin_pass,
+                  }
+              ).encode(),
+              headers={"Content-Type": "application/x-www-form-urlencoded"},
+          )
+          with urllib.request.urlopen(token_req) as resp:
+              token = json.loads(resp.read().decode())["access_token"]
+
+          admin_headers = {
+              "Authorization": f"Bearer {token}",
+              "Content-Type": "application/json",
+          }
+
+          create_payload = {
+              "clientId": client_id,
+              "enabled": True,
+              "protocol": "openid-connect",
+              "publicClient": False,
+              "secret": client_secret,
+              "serviceAccountsEnabled": True,
+              "directAccessGrantsEnabled": False,
+              "standardFlowEnabled": False,
+          }
+
+          create_req = urllib.request.Request(
+              f"{base}/admin/realms/{realm}/clients",
+              data=json.dumps(create_payload).encode(),
+              method="POST",
+              headers=admin_headers,
+          )
+          try:
+              with urllib.request.urlopen(create_req):
+                  pass
+          except urllib.error.HTTPError as exc:
+              if exc.code != 409:
+                  raise
+
+          list_req = urllib.request.Request(
+              f"{base}/admin/realms/{realm}/clients?clientId={urllib.parse.quote(client_id)}",
+              headers={"Authorization": f"Bearer {token}"},
+          )
+          with urllib.request.urlopen(list_req) as resp:
+              clients = json.loads(resp.read().decode())
+          if not clients:
+              raise RuntimeError("Failed to find provisioned integration client")
+          client_uuid = clients[0]["id"]
+
+          role_req = urllib.request.Request(
+              f"{base}/admin/realms/{realm}/clients?clientId=realm-management",
+              headers={"Authorization": f"Bearer {token}"},
+          )
+          with urllib.request.urlopen(role_req) as resp:
+              rm_clients = json.loads(resp.read().decode())
+          rm_uuid = rm_clients[0]["id"]
+
+          svc_req = urllib.request.Request(
+              f"{base}/admin/realms/{realm}/clients/{client_uuid}/service-account-user",
+              headers={"Authorization": f"Bearer {token}"},
+          )
+          with urllib.request.urlopen(svc_req) as resp:
+              svc_user = json.loads(resp.read().decode())
+          svc_user_id = svc_user["id"]
+
+          roles_req = urllib.request.Request(
+              f"{base}/admin/realms/{realm}/clients/{rm_uuid}/roles",
+              headers={"Authorization": f"Bearer {token}"},
+          )
+          with urllib.request.urlopen(roles_req) as resp:
+              roles = json.loads(resp.read().decode())
+
+          wanted = {"manage-users", "view-users", "query-users"}
+          selected = [
+              {"id": r["id"], "name": r["name"]}
+              for r in roles
+              if r.get("name") in wanted
+          ]
+          if len(selected) < 2:
+              raise RuntimeError("Required realm-management roles not found")
+
+          map_req = urllib.request.Request(
+              f"{base}/admin/realms/{realm}/users/{svc_user_id}/role-mappings/clients/{rm_uuid}",
+              data=json.dumps(selected).encode(),
+              method="POST",
+              headers=admin_headers,
+          )
+          with urllib.request.urlopen(map_req):
+              pass
+
+          with open(".integration.env", "w", encoding="utf-8") as f:
+              f.write("PYKEYCLOAK_INTEGRATION_ENABLED=1\n")
+              f.write(f"KEYCLOAK_BASE_URL={base}\n")
+              f.write(f"KEYCLOAK_REALM_IT_REALM_NAME={realm}\n")
+              f.write(f"KEYCLOAK_REALM_IT_CLIENT_UUID={client_uuid}\n")
+              f.write(f"KEYCLOAK_REALM_IT_CLIENT_ID={client_id}\n")
+              f.write(f"KEYCLOAK_REALM_IT_CLIENT_SECRET={client_secret}\n")
+          PY
+
+      - name: Run integration smoke tests
+        run: |
+          set -a
+          . ./.integration.env
+          set +a
+          PYTHONPATH=src uv run pytest tests/integration -m integration -vv -s
 
   publish:
     runs-on: ubuntu-latest
@@ -93,3 +310,23 @@ jobs:
       - name: Clean up
         run: |
           rm -rf dist
+
+  release:
+    runs-on: ubuntu-latest
+    needs: publish
+    if: startsWith(github.ref, 'refs/tags/v')
+    permissions:
+      contents: write
+    steps:
+      - name: Download built artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: package
+          path: dist
+
+      - name: Create GitHub Release with autogenerated notes
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: |
+            dist/*

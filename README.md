@@ -15,8 +15,47 @@ PyKeycloak is a library for working with Keycloak that provides asynchronous met
 To install dependencies for local development, use the following command:
 
 ```bash
-
 make install
+```
+
+## Development and Security Tooling
+
+Runtime users of the library only install `pykeycloak` and its package dependencies.
+
+For contributors (local checks + CI parity), install:
+
+- `uv`
+- `pre-commit`
+- `trivy`
+
+Then run:
+
+```bash
+make install
+uv run pre-commit install
+```
+
+Security checks are executed in both pre-commit and GitHub Actions:
+
+- Dependency CVE audit: `pip-audit --strict`
+- Repo scan: `trivy fs --severity HIGH,CRITICAL --ignore-unfixed --scanners vuln,secret,misconfig .`
+
+## Release Version Bump
+
+Releases are tag-driven via GitHub Actions:
+
+- Tag format: `vX.Y.Z` (example: `v0.7.4`)
+- On tag push, CI syncs `pyproject.toml` version from the tag before build/publish.
+- After successful publish, GitHub Release is created automatically with generated release notes.
+- Build artifacts include a CycloneDX SBOM (`sbom.cyclonedx.json`) attached to the GitHub Release.
+- CI enforces an SBOM license deny policy (fails on disallowed copyleft licenses by default).
+- License policy is defined in `.license-policy.toml` (`deny = [...]`).
+
+Local helpers:
+
+```bash
+make release-bump                    # uses GITHUB_REF_NAME
+make release-bump-tag TAG=v0.7.4     # explicit tag
 ```
 
 ## Usage Examples
@@ -265,6 +304,8 @@ Run:
 ```bash
 uv run pytest tests/integration -m integration -vv -s
 ```
+
+CI has a manual compatibility matrix against Keycloak `24.0`, `25.0`, and `26.0` via GitHub Actions `workflow_dispatch` input (`run_integration_matrix=true`).
 
 ### Token Introspection
 

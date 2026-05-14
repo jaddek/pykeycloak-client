@@ -41,7 +41,8 @@ endef
 # ========================
 .PHONY: default help install clean run tests \
         pre-commit pre-commit-install pre-commit-update \
-        script-% set-python-version format lint
+        script-% set-python-version format lint \
+        release-bump release-bump-tag
 
 default: help
 
@@ -126,6 +127,16 @@ test-functional: ## Run functional tests
 
 test-with-coverage: ## Run all tests with coverage
 	@$(load_env); $(UV_RUN) pytest tests --cov=src --cov-report=html --cov-report=term -vv -s
+
+release-bump: ## Sync pyproject version from GITHUB_REF_NAME (vX.Y.Z)
+	@python3 bin/sync_version_from_tag.py
+
+release-bump-tag: ## Sync pyproject version from TAG=vX.Y.Z
+	@if [ -z "$(TAG)" ]; then \
+		echo "TAG is required. Example: make release-bump-tag TAG=v0.7.4"; \
+		exit 1; \
+	fi
+	@python3 bin/sync_version_from_tag.py --tag "$(TAG)"
 
 
 # =========
