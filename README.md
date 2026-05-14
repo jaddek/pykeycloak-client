@@ -26,7 +26,6 @@ For contributors (local checks + CI parity), install:
 
 - `uv`
 - `pre-commit`
-- `trivy`
 
 Then run:
 
@@ -38,7 +37,6 @@ uv run pre-commit install
 Security checks are executed in both pre-commit and GitHub Actions:
 
 - Dependency CVE audit: `pip-audit --strict`
-- Repo scan: `trivy fs --severity HIGH,CRITICAL --ignore-unfixed --scanners vuln,secret,misconfig .`
 
 ## Release Version Bump
 

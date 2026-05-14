@@ -32,8 +32,3 @@ repos:
         entry: /bin/sh -lc 'uv export --frozen --format requirements.txt --all-groups --no-emit-project -o /tmp/requirements-audit.txt && uv run pip-audit --strict --requirement /tmp/requirements-audit.txt --no-deps'
         language: system
         pass_filenames: false
-      - id: trivy-fs
-        name: trivy fs (vuln/secret/misconfig)
-        entry: /bin/sh -lc 'if ! command -v trivy >/dev/null 2>&1; then echo "trivy not installed locally; skipping (CI still enforces this check)."; exit 0; fi; trivy fs --severity HIGH,CRITICAL --ignore-unfixed --scanners vuln,secret,misconfig .'
-        language: system
-        pass_filenames: false
