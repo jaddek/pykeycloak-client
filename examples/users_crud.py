@@ -13,6 +13,7 @@ from pykeycloak.providers.payloads import (
 
 
 async def main():
+    # WARNING: This example creates, mutates, and deletes a real user in Keycloak.
     keycloak = get_keycloak(default_realm_client)
 
     await keycloak.auth.client_login_async()

@@ -6,6 +6,7 @@ from pykeycloak.providers.queries import PaginationQuery
 
 
 async def main():
+    # WARNING: This example calls logout_all_users_async(), which logs out all realm users.
     keycloak = get_keycloak(default_realm_client)
 
     await keycloak.auth.client_login_async()

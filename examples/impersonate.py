@@ -12,9 +12,15 @@ async def main():
     keycloak = get_keycloak(default_realm_client)
 
     await keycloak.auth.client_login_async()
-    result = await keycloak.users.impersonate_async(
-        "b8b1a406-b8b1-78e6-a0e7-618f997aa57c"
-    )  # noqa: F841
+
+    users, _count = await keycloak.users.get_users_async()
+    if not users:
+        print("No users found to impersonate")
+        return
+
+    # Pick first available user to keep the example reproducible across environments.
+    user_id = users[0].id
+    result = await keycloak.users.impersonate_async(user_id)  # noqa: F841
 
     print("-----")
     print(result)

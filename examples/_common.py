@@ -1,4 +1,5 @@
 import logging
+import os
 
 from pykeycloak.core.protocols import KeycloakServiceFactoryProtocol
 from pykeycloak.core.realm import RealmClient
@@ -9,9 +10,10 @@ logging.basicConfig(
     level=logging.DEBUG, format="%(name)s - %(levelname)s - %(message)s"
 )
 
-username = "admin"
-password = "password"  # noqa: S105
-default_realm_client = "otago_service"
+# Demo defaults for local development; override with env vars in real usage.
+username = os.getenv("PYKEYCLOAK_EXAMPLE_USERNAME", "admin")
+password = os.getenv("PYKEYCLOAK_EXAMPLE_PASSWORD", "password")  # noqa: S105
+default_realm_client = os.getenv("PYKEYCLOAK_EXAMPLE_CLIENT", "otago_service")
 __pkc = PyKeycloak()
 
 

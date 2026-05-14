@@ -10,6 +10,7 @@ prefix_for_updated_role = str(time())
 
 
 async def main():
+    # WARNING: This example creates and deletes a real role, and may assign it to a user.
     keycloak = get_keycloak(default_realm_client)
 
     await keycloak.auth.client_login_async()

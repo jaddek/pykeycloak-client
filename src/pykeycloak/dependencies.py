@@ -4,7 +4,6 @@ from importlib.metadata import PackageNotFoundError, version
 from typing import TYPE_CHECKING, Protocol
 
 from httpx import AsyncClient, AsyncHTTPTransport
-from httpx._types import HeaderTypes
 
 from pykeycloak.services.services import (
     AuthService,
@@ -32,6 +31,12 @@ from .core.protocols import (
 from .core.realm import RealmClient
 from .core.settings import ClientSettings, HttpTransportSettings
 from .core.validator import KeycloakResponseValidator
+
+type HeaderTypes = (
+    Mapping[str | bytes, str | bytes]
+    | list[tuple[str | bytes, str | bytes]]
+    | tuple[tuple[str | bytes, str | bytes], ...]
+)
 
 
 class FactoryRegistry:
@@ -231,13 +236,14 @@ def get_async_client(
         }
 
     merged_headers = _coerce_headers(client_settings.headers)
-    if "User-Agent" not in merged_headers:
+    has_user_agent = any(k.lower() == "user-agent" for k in merged_headers)
+    if not has_user_agent:
         merged_headers.update(get_default_user_agent())
-    client_settings.headers = merged_headers
+    settings_dict = client_settings.to_dict()
+    settings_dict["headers"] = merged_headers
+    settings_dict["transport"] = transport
 
-    client_settings.transport = transport
-
-    return AsyncClient(**client_settings.to_dict())
+    return AsyncClient(**settings_dict)
 
 
 def get_async_client_with_env() -> AsyncClient:

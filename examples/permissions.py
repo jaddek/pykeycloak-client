@@ -26,7 +26,7 @@ async def main():
     #     policies=["YOUR_POLICY_ID_HERE"],
     # )
     #
-    # created_resource_permission = await keycloak.permissions.create_client_authz_permission_based_on_resource_async(
+    # created_resource_permission = await keycloak.authz_permission.create_client_authz_permission_based_on_resource_async(
     #     payload=resource_based_permission_payload
     # )
     # print(f"Created resource-based permission: {created_resource_permission}")
@@ -40,7 +40,7 @@ async def main():
     #     policies=["YOUR_POLICY_ID_HERE"],
     # )
     #
-    # created_scope_permission = await keycloak.permissions.create_client_authz_permission_based_on_scope_async(
+    # created_scope_permission = await keycloak.authz_permission.create_client_authz_permission_based_on_scope_async(
     #     payload=scope_based_permission_payload
     # )
     # print(f"Created scope-based permission: {created_scope_permission}")
@@ -55,7 +55,7 @@ async def main():
     #     first_permission = permissions[0] if isinstance(permissions[0], dict) else None
     #     if first_permission and 'id' in first_permission:
     #         first_permission_id = first_permission['id']
-    #         updated_permission = await keycloak.permissions.update_permission_scopes_async(
+    #         updated_permission = await keycloak.authz_permission.update_permission_scopes_async(
     #             permission_id=first_permission_id,
     #             payload=update_scopes_payload
     #         )
@@ -67,7 +67,7 @@ async def main():
     #     first_permission = permissions[0] if isinstance(permissions[0], dict) else None
     #     if first_permission and 'id' in first_permission:
     #         first_permission_id = first_permission['id']
-    #         deleted_permission = await keycloak.permissions.delete_permission_async(
+    #         deleted_permission = await keycloak.authz_permission.delete_permission_async(
     #             permission_id=first_permission_id
     #         )
     #         print(f"Deleted permission with ID: {first_permission_id}")

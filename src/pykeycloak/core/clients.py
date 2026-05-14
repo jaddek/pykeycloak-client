@@ -2,6 +2,7 @@
 # Copyright (c) 2026 Anton "Tony" Nazarov <tonynazarov+dev@gmail.com>
 import asyncio
 import os
+from collections.abc import Callable
 from dataclasses import dataclass
 from enum import Enum
 from http import HTTPStatus
@@ -36,6 +37,16 @@ class HttpMethod(Enum):
 
 
 class KeycloakHttpClientSync: ...
+
+
+@dataclass(frozen=True, slots=True)
+class ClientDiagnostics:
+    timeout: Any
+    base_url: str
+    default_headers: Any
+    max_connections: int | str | None = None
+    max_keepalive_connections: int | str | None = None
+    keepalive_expiry: float | str | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -104,9 +115,11 @@ class KeycloakHttpClientAsync:
         self,
         client: AsyncClient,
         retry_policy: RetryPolicy | None = None,
+        diagnostics_provider: Callable[[], ClientDiagnostics] | None = None,
     ):
         self._client = client
         self._retry_policy = retry_policy or RetryPolicy.with_env()
+        self._diagnostics_provider = diagnostics_provider
 
     @property
     def client(self) -> AsyncClient:
@@ -114,9 +127,15 @@ class KeycloakHttpClientAsync:
 
     @staticmethod
     def init_default_client(
-        client: AsyncClient, retry_policy: RetryPolicy | None = None
+        client: AsyncClient,
+        retry_policy: RetryPolicy | None = None,
+        diagnostics_provider: Callable[[], ClientDiagnostics] | None = None,
     ) -> "KeycloakHttpClientAsync":
-        return KeycloakHttpClientAsync(client=client, retry_policy=retry_policy)
+        return KeycloakHttpClientAsync(
+            client=client,
+            retry_policy=retry_policy,
+            diagnostics_provider=diagnostics_provider,
+        )
 
     def _should_retry_method(self, method: HttpMethod) -> bool:
         return method.value in self._retry_policy.retry_methods
@@ -152,11 +171,18 @@ class KeycloakHttpClientAsync:
         return float(min(float(self._retry_policy.max_delay_seconds), backoff + jitter))
 
     def log_client_config_before_request(self) -> None:
-        pool = getattr(self.client._transport, "_pool", None)
-
-        max_conns = getattr(pool, "_max_connections", "N/A")
-        max_keepalive = getattr(pool, "_max_keepalive_connections", "N/A")
-        keepalive_expiry = getattr(pool, "_keepalive_expiry", "N/A")
+        diagnostics = (
+            self._diagnostics_provider()
+            if self._diagnostics_provider is not None
+            else ClientDiagnostics(
+                timeout=self.client.timeout,
+                base_url=str(self.client.base_url),
+                default_headers=self.client.headers,
+                max_connections="N/A",
+                max_keepalive_connections="N/A",
+                keepalive_expiry="N/A",
+            )
+        )
 
         logger.debug(
             "HTTPX\n=========================================\n"
@@ -164,12 +190,12 @@ class KeycloakHttpClientAsync:
             " timeouts=%s, max_connections=%s, max_keepalive=%s, keepalive_expiry=%s,\n"
             " base_url=%s, default_headers=%s\n"
             "=========================================",
-            self.client.timeout,
-            max_conns,
-            max_keepalive,
-            keepalive_expiry,
-            self.client.base_url,
-            self.client.headers,
+            diagnostics.timeout,
+            diagnostics.max_connections,
+            diagnostics.max_keepalive_connections,
+            diagnostics.keepalive_expiry,
+            diagnostics.base_url,
+            diagnostics.default_headers,
         )
 
     def build_full_url(self, path: str, query: str) -> str:
