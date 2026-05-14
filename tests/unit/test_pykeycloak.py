@@ -25,14 +25,14 @@ class TestPyKeycloak:
         )
 
         with (
-            patch("pykeycloak_client.pykeycloak_client.get_headers_factory", return_value="headers"),
+            patch("pykeycloak_client.pykeycloak.get_headers_factory", return_value="headers"),
             patch(
-                "pykeycloak_client.pykeycloak_client.get_keycloak_http_client_from_env",
+                "pykeycloak_client.pykeycloak.get_keycloak_http_client_from_env",
                 return_value="client",
             ),
-            patch("pykeycloak_client.pykeycloak_client.get_response_validator", return_value="validator"),
-            patch("pykeycloak_client.pykeycloak_client.KeycloakInMemoryProviderAsync") as provider_cls,
-            patch("pykeycloak_client.pykeycloak_client.KeycloakServiceFactory") as factory_cls,
+            patch("pykeycloak_client.pykeycloak.get_response_validator", return_value="validator"),
+            patch("pykeycloak_client.pykeycloak.KeycloakInMemoryProviderAsync") as provider_cls,
+            patch("pykeycloak_client.pykeycloak.KeycloakServiceFactory") as factory_cls,
         ):
             provider_instance = MagicMock()
             provider_cls.return_value = provider_instance
