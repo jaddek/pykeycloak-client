@@ -3,7 +3,10 @@ import uuid
 
 from _common import default_realm_client, get_keycloak
 
-from pykeycloak_client.providers.payloads import CreateUserPayload, PasswordCredentialsPayload
+from pykeycloak_client.providers.payloads import (
+    CreateUserPayload,
+    PasswordCredentialsPayload,
+)
 from pykeycloak_client.providers.queries import GetUsersQuery
 
 

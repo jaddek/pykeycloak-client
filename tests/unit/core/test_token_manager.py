@@ -4,7 +4,11 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from pykeycloak_client.core.token_manager import AuthToken, AuthTokenValidator, TokenManager
+from pykeycloak_client.core.token_manager import (
+    AuthToken,
+    AuthTokenValidator,
+    TokenManager,
+)
 
 
 def make_token(

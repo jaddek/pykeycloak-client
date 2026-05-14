@@ -4,7 +4,11 @@ from unittest.mock import AsyncMock, MagicMock, patch
 import pytest
 from httpx import ConnectError, Request
 
-from pykeycloak_client.core.clients import HttpMethod, KeycloakHttpClientAsync, RetryPolicy
+from pykeycloak_client.core.clients import (
+    HttpMethod,
+    KeycloakHttpClientAsync,
+    RetryPolicy,
+)
 
 
 class TestHttpMethod:
