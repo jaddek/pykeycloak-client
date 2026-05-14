@@ -225,22 +225,21 @@ class TokenAutoRefresher:
             if self.token_manager.auth_tokens is None:
                 raise RuntimeError("Token manager must initialize access_token first")
 
-            if not self.token_manager.is_access_token_valid():
-                if self.token_manager.auth_tokens.refresh_token:
-                    new_token = await self.token_manager.fetch_access_token_using_refresh_token()
-                    self.token_manager.update_auth_tokens(new_token)
-                else:
-                    raise RuntimeError(
-                        "Token manager must initialize refresh_token first"
-                    )
+            if (
+                not self.token_manager.is_access_token_valid()
+                and not self.token_manager.auth_tokens.refresh_token
+            ):
+                raise RuntimeError("Token manager must initialize refresh_token first")
 
-            if self.token_manager.auth_tokens.access_token is None:
+            token = await self.token_manager.get_valid_token()
+
+            if token.access_token is None:
                 raise ValueError("Access token is missing")
 
             return await method(
                 instance,
                 *args,
-                access_token=self.token_manager.auth_tokens.access_token,  # type: ignore[arg-type]
+                access_token=token.access_token,  # type: ignore[arg-type]
                 **kwargs,
             )
 
