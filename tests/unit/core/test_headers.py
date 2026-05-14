@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: MIT
 import pytest
 
-from pykeycloak.core.headers import HeadersFactory
+from pykeycloak_client.core.headers import HeadersFactory
 
 
 @pytest.fixture

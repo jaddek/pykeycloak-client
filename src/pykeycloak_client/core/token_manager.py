@@ -11,10 +11,12 @@ from typing import Any, Protocol, cast
 
 from httpx import Response
 
-from pykeycloak.core.constants import KEYCLOAK_TOKEN_VALIDATION_TIME_FRAME_SECONDS
-from pykeycloak.core.helpers import dataclass_from_dict
-from pykeycloak.core.types import AnyCallable
-from pykeycloak.providers.payloads import ClientCredentialsLoginPayload
+from pykeycloak_client.core.constants import (
+    KEYCLOAK_TOKEN_VALIDATION_TIME_FRAME_SECONDS,
+)
+from pykeycloak_client.core.helpers import dataclass_from_dict
+from pykeycloak_client.core.types import AnyCallable
+from pykeycloak_client.providers.payloads import ClientCredentialsLoginPayload
 
 from .. import logger
 

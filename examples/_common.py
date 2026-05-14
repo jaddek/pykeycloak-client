@@ -1,10 +1,10 @@
 import logging
 import os
 
-from pykeycloak.core.protocols import KeycloakServiceFactoryProtocol
-from pykeycloak.core.realm import RealmClient
-from pykeycloak.providers.payloads import UserCredentialsLoginPayload
-from pykeycloak.pykeycloak import PyKeycloak
+from pykeycloak_client.core.protocols import KeycloakServiceFactoryProtocol
+from pykeycloak_client.core.realm import RealmClient
+from pykeycloak_client.providers.payloads import UserCredentialsLoginPayload
+from pykeycloak_client.pykeycloak import PyKeycloak
 
 logging.basicConfig(
     level=logging.DEBUG, format="%(name)s - %(levelname)s - %(message)s"

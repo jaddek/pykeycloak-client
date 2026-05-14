@@ -1,10 +1,10 @@
 # SPDX-License-Identifier: MIT
 # Copyright (c) 2026 Anton "Tony" Nazarov <tonynazarov+dev@gmail.com>
 
-from pykeycloak.core.clients import KeycloakHttpClientAsync
-from pykeycloak.core.headers import HeadersProtocol
-from pykeycloak.core.realm import RealmClient
-from pykeycloak.core.token_manager import TokenManager
+from pykeycloak_client.core.clients import KeycloakHttpClientAsync
+from pykeycloak_client.core.headers import HeadersProtocol
+from pykeycloak_client.core.realm import RealmClient
+from pykeycloak_client.core.token_manager import TokenManager
 
 from ._auth import AuthProvider
 from ._authz import (

@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: MIT
-import pykeycloak.core.urls as urls
+import pykeycloak_client.core.urls as urls
 
 
 class TestBaseUrls:

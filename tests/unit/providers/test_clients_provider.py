@@ -3,8 +3,8 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from pykeycloak.core.clients import HttpMethod
-from pykeycloak.providers._clients import ClientsProvider
+from pykeycloak_client.core.clients import HttpMethod
+from pykeycloak_client.providers._clients import ClientsProvider
 
 
 @pytest.fixture

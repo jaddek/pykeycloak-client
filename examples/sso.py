@@ -2,7 +2,7 @@ import asyncio
 
 from _common import default_realm_client, get_keycloak
 
-from pykeycloak.providers.payloads import (
+from pykeycloak_client.providers.payloads import (
     SSOLoginPayload,
 )
 

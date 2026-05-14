@@ -77,7 +77,7 @@ The library can be used in 3 different ways:
 ## KEYCLOAK_REALM_{realm_client_name}_CLIENT_ID
 ## KEYCLOAK_REALM_{realm_client_name}_CLIENT_SECRET
 ##
-## pykeycloak.register(key, RealmClient.from_env(client_name=realm_client_name))
+## pykeycloak_client.register(key, RealmClient.from_env(client_name=realm_client_name))
 ##
 ## But you don't need those when making RealmClient not from env
 ##
@@ -139,8 +139,8 @@ UMA_PERMISSIONS_CHUNK_SIZE=1
 ### Initial start
 
 ```python
-from pykeycloak.pykeycloak import PyKeycloak
-from pykeycloak.core.realm import RealmClient
+from pykeycloak_client.pykeycloak import PyKeycloak
+from pykeycloak_client.core.realm import RealmClient
 
 key = "otago_service"
 pkc = PyKeycloak()
@@ -206,7 +206,7 @@ Representations duplicate the data from Keycloak documentation based on the actu
 
 ```python
 import os
-from pykeycloak.core.realm import RealmClient
+from pykeycloak_client.core.realm import RealmClient
 
 ## To get pre-configured client based on environment variables
 RealmClient.from_env(client_name='random_client_name')
@@ -226,7 +226,7 @@ Processes headers and request/response logs, hiding all critical information and
 
 ```python
 import os
-from pykeycloak.core.sanitizer import SensitiveDataSanitizer
+from pykeycloak_client.core.sanitizer import SensitiveDataSanitizer
 
 SensitiveDataSanitizer.from_env()
 
@@ -244,8 +244,8 @@ To get started, you need to initialize the client using environment variables:
 To authenticate a user, use the `user_login_async` method:
 
 ```python
-from pykeycloak.providers.payloads import UserCredentialsLoginPayload
-from pykeycloak.pykeycloak import PyKeycloak
+from pykeycloak_client.providers.payloads import UserCredentialsLoginPayload
+from pykeycloak_client.pykeycloak import PyKeycloak
 
 pkc = PyKeycloak()
 
@@ -263,7 +263,7 @@ token = await pkc.get('otago_client').auth.user_login_async(
 To refresh a token, use the `refresh_token_async` method:
 
 ```python
-from pykeycloak.pykeycloak import PyKeycloak
+from pykeycloak_client.pykeycloak import PyKeycloak
 
 pkc = PyKeycloak()
 
@@ -310,8 +310,8 @@ CI has a manual compatibility matrix against Keycloak `24.0`, `25.0`, and `26.0`
 To introspect a token, use the `introspect_async` method:
 
 ```python
-from pykeycloak.providers.payloads import TokenIntrospectionPayload
-from pykeycloak.pykeycloak import PyKeycloak
+from pykeycloak_client.providers.payloads import TokenIntrospectionPayload
+from pykeycloak_client.pykeycloak import PyKeycloak
 
 pkc = PyKeycloak()
 
@@ -329,8 +329,8 @@ introspection = await pkc.get('otago_client').auth.introspect_token_async(
 To retrieve UMA permissions, use the `get_uma_permissions_async` method:
 
 ```python
-from pykeycloak.providers.payloads import UMAAuthorizationPayload
-from pykeycloak.pykeycloak import PyKeycloak
+from pykeycloak_client.providers.payloads import UMAAuthorizationPayload
+from pykeycloak_client.pykeycloak import PyKeycloak
 
 pkc = PyKeycloak()
 
@@ -350,7 +350,7 @@ permissions = await pkc.get('otago_client').uma.get_uma_permissions_async(
 To retrieve user information, use the `get_user_info_async` method:
 
 ```python
-from pykeycloak.pykeycloak import PyKeycloak
+from pykeycloak_client.pykeycloak import PyKeycloak
 
 pkc = PyKeycloak()
 
@@ -366,7 +366,7 @@ user_info = await pkc.get('otago_client').auth.get_user_info_async(
 To log out, use the `logout_async` method:
 
 ```python
-from pykeycloak.pykeycloak import PyKeycloak
+from pykeycloak_client.pykeycloak import PyKeycloak
 
 pkc = PyKeycloak()
 
@@ -380,7 +380,7 @@ await pkc.get('otago_client').auth.logout_async(refresh.refresh_token)
 To retrieve certificates, use the `get_certs_async` method:
 
 ```python
-from pykeycloak.pykeycloak import PyKeycloak
+from pykeycloak_client.pykeycloak import PyKeycloak
 
 pkc = PyKeycloak()
 

@@ -3,12 +3,12 @@
 
 from urllib.parse import urlencode
 
-from pykeycloak.core.clients import HttpMethod
-from pykeycloak.core.exceptions import AccessTokenIsRequiredError
-from pykeycloak.core.helpers import dataclass_from_dict
-from pykeycloak.core.protocols import KeycloakResponseProtocol
-from pykeycloak.core.token_manager import AuthToken, TokenManager
-from pykeycloak.core.urls import (
+from pykeycloak_client.core.clients import HttpMethod
+from pykeycloak_client.core.exceptions import AccessTokenIsRequiredError
+from pykeycloak_client.core.helpers import dataclass_from_dict
+from pykeycloak_client.core.protocols import KeycloakResponseProtocol
+from pykeycloak_client.core.token_manager import AuthToken, TokenManager
+from pykeycloak_client.core.urls import (
     REALM_CLIENT_OPENID_CONFIGURATION,
     REALM_CLIENT_OPENID_URL_AUTH,
     REALM_CLIENT_OPENID_URL_AUTH_DEVICE,

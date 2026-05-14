@@ -1,12 +1,12 @@
 # SPDX-License-Identifier: MIT
 import json
 
-from pykeycloak.core.enums import (
+from pykeycloak_client.core.enums import (
     GrantTypeEnum,
     UrnIetfOauthUmaTicketPermissionResourceFormatEnum,
     UrnIetfOauthUmaTicketResponseModeEnum,
 )
-from pykeycloak.providers.payloads import (
+from pykeycloak_client.providers.payloads import (
     ClientCredentialsLoginPayload,
     ConfidentialClientRevokePayload,
     CreateUserPayload,
@@ -274,14 +274,14 @@ class TestUserUpdatePasswordPayload:
 
 class TestRolePayload:
     def test_name_required(self):
-        from pykeycloak.providers.payloads import RolePayload
+        from pykeycloak_client.providers.payloads import RolePayload
 
         p = RolePayload(name="admin")
         d = p.to_dict()
         assert d["name"] == "admin"
 
     def test_optional_fields_excluded(self):
-        from pykeycloak.providers.payloads import RolePayload
+        from pykeycloak_client.providers.payloads import RolePayload
 
         p = RolePayload(name="admin")
         d = p.to_dict()

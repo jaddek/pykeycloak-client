@@ -3,9 +3,9 @@
 
 from collections.abc import Awaitable, Callable
 
-from pykeycloak.core.clients import HttpMethod
-from pykeycloak.core.protocols import KeycloakResponseProtocol
-from pykeycloak.core.urls import REALM_CLIENT, REALM_CLIENTS
+from pykeycloak_client.core.clients import HttpMethod
+from pykeycloak_client.core.protocols import KeycloakResponseProtocol
+from pykeycloak_client.core.urls import REALM_CLIENT, REALM_CLIENTS
 
 from ._base import KeycloakProviderBase
 

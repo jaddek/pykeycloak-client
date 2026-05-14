@@ -4,7 +4,7 @@
 from dataclasses import dataclass, field, fields
 from typing import Any, Self
 
-from pykeycloak.core.token_manager import AuthToken
+from pykeycloak_client.core.token_manager import AuthToken
 
 type RepresentationModel[T] = AuthToken | Representation | list[Representation]
 

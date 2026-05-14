@@ -3,9 +3,9 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from pykeycloak.core.clients import HttpMethod
-from pykeycloak.providers._sessions import SessionsProvider
-from pykeycloak.providers.queries import PaginationQuery
+from pykeycloak_client.core.clients import HttpMethod
+from pykeycloak_client.providers._sessions import SessionsProvider
+from pykeycloak_client.providers.queries import PaginationQuery
 
 
 @pytest.fixture

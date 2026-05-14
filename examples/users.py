@@ -3,8 +3,8 @@ import uuid
 
 from _common import default_realm_client, get_keycloak
 
-from pykeycloak.providers.payloads import CreateUserPayload, PasswordCredentialsPayload
-from pykeycloak.providers.queries import GetUsersQuery
+from pykeycloak_client.providers.payloads import CreateUserPayload, PasswordCredentialsPayload
+from pykeycloak_client.providers.queries import GetUsersQuery
 
 
 async def main():

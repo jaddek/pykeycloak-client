@@ -4,9 +4,9 @@
 from collections.abc import Awaitable, Callable
 from uuid import UUID
 
-from pykeycloak.core.clients import HttpMethod
-from pykeycloak.core.protocols import KeycloakResponseProtocol
-from pykeycloak.core.urls import (
+from pykeycloak_client.core.clients import HttpMethod
+from pykeycloak_client.core.protocols import KeycloakResponseProtocol
+from pykeycloak_client.core.urls import (
     REALM_CLIENT_ACTIVE_SESSION_COUNT,
     REALM_CLIENT_OFFLINE_SESSION_COUNT,
     REALM_CLIENT_OFFLINE_SESSIONS,

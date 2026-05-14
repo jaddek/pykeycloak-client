@@ -5,9 +5,9 @@ from unittest.mock import AsyncMock, MagicMock, patch
 import pytest
 from httpx import Headers
 
-from pykeycloak.core.realm import RealmClient
-from pykeycloak.core.settings import ClientSettings
-from pykeycloak.dependencies import (
+from pykeycloak_client.core.realm import RealmClient
+from pykeycloak_client.core.settings import ClientSettings
+from pykeycloak_client.dependencies import (
     FactoryRegistry,
     KeycloakServiceFactory,
     get_async_client,
@@ -70,7 +70,7 @@ class TestGetAsyncClient:
 
 class TestDependencyHelpers:
     def test_simple_helpers_return_expected_types(self):
-        assert get_package_name() == "pykeycloak"
+        assert get_package_name() == "pykeycloak_client"
         assert "User-Agent" in get_default_user_agent()
         assert get_headers_factory() is not None
         assert get_response_validator() is not None
@@ -78,11 +78,11 @@ class TestDependencyHelpers:
 
     def test_get_default_user_agent_fallback_version(self):
         with patch(
-            "pykeycloak.dependencies.version",
+            "pykeycloak_client.dependencies.version",
             side_effect=PackageNotFoundError("not found"),
         ):
             ua = get_default_user_agent()
-            assert ua["User-Agent"].startswith("pykeycloak/")
+            assert ua["User-Agent"].startswith("pykeycloak_client/")
 
     def test_get_service_factory_constructs_provider(self):
         provider_instance = MagicMock()
@@ -130,7 +130,7 @@ class TestDependencyHelpers:
         assert wrapped.client is client
 
         with patch(
-            "pykeycloak.dependencies.get_async_client_with_env", return_value=client
+            "pykeycloak_client.dependencies.get_async_client_with_env", return_value=client
         ):
             wrapped_env = get_keycloak_http_client_from_env()
             assert wrapped_env.client is client

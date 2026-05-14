@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: MIT
 import pytest
 
-from pykeycloak.providers.queries import (
+from pykeycloak_client.providers.queries import (
     AdminRolesQuery,
     BriefRepresentationQuery,
     FilterFindPolicyParams,

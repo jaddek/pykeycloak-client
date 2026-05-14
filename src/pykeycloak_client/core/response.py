@@ -8,8 +8,8 @@ from typing import Any
 
 from httpx import Headers
 
-from pykeycloak.core.exceptions import KeycloakDecodingError
-from pykeycloak.core.types import JsonData
+from pykeycloak_client.core.exceptions import KeycloakDecodingError
+from pykeycloak_client.core.types import JsonData
 
 
 @dataclass(frozen=True, slots=True)

@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: MIT
 import pytest
 
-from pykeycloak.core.exceptions import (
+from pykeycloak_client.core.exceptions import (
     KeycloakBadRequestError,
     KeycloakConflictError,
     KeycloakDecodingError,
@@ -13,8 +13,8 @@ from pykeycloak.core.exceptions import (
     KeycloakUnprocessableEntityError,
     KeycloakUnsupportedMediaTypeError,
 )
-from pykeycloak.core.response import KeycloakResponseBuilder
-from pykeycloak.core.validator import KeycloakResponseValidator
+from pykeycloak_client.core.response import KeycloakResponseBuilder
+from pykeycloak_client.core.validator import KeycloakResponseValidator
 
 
 def make_response(status_code, text="", content=b"", json_data=None, headers=None):

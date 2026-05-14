@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: MIT
 import pytest
 
-from pykeycloak.core.settings import ClientSettings, HttpTransportSettings
+from pykeycloak_client.core.settings import ClientSettings, HttpTransportSettings
 
 
 class TestHttpTransportSettings:

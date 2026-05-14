@@ -4,14 +4,14 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from pykeycloak.core.token_manager import (
+from pykeycloak_client.core.token_manager import (
     AuthToken,
     TokenAutoRefresher,
     TokenManager,
     inject_verified_access_token,
     mark_need_access_token_initialization,
 )
-from pykeycloak.providers.payloads import ClientCredentialsLoginPayload
+from pykeycloak_client.providers.payloads import ClientCredentialsLoginPayload
 
 
 @pytest.fixture

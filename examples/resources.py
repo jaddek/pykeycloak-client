@@ -3,7 +3,7 @@ import uuid
 
 from _common import default_realm_client, get_keycloak
 
-from pykeycloak.providers.payloads import ResourcePayload
+from pykeycloak_client.providers.payloads import ResourcePayload
 
 
 async def main():

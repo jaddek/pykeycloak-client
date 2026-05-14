@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: MIT
 import pytest
 
-from pykeycloak.core.enums import (
+from pykeycloak_client.core.enums import (
     AuthFlowsEnum,
     ClientAuthenticatorTypeEnum,
     DecisionStrategyEnum,

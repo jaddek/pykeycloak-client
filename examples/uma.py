@@ -2,8 +2,8 @@ import asyncio
 
 from _common import default_realm_client, get_keycloak, get_user_credentials
 
-from pykeycloak.core.enums import UrnIetfOauthUmaTicketResponseModeEnum
-from pykeycloak.providers.payloads import (
+from pykeycloak_client.core.enums import UrnIetfOauthUmaTicketResponseModeEnum
+from pykeycloak_client.providers.payloads import (
     UMAAuthorizationPayload,
 )
 

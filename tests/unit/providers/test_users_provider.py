@@ -3,15 +3,15 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from pykeycloak.core.clients import HttpMethod
-from pykeycloak.providers._users import UsersProvider
-from pykeycloak.providers.payloads import (
+from pykeycloak_client.core.clients import HttpMethod
+from pykeycloak_client.providers._users import UsersProvider
+from pykeycloak_client.providers.payloads import (
     CreateUserPayload,
     UpdateUserPayload,
     UserUpdateEnablePayload,
     UserUpdatePasswordPayload,
 )
-from pykeycloak.providers.queries import GetUsersQuery
+from pykeycloak_client.providers.queries import GetUsersQuery
 
 
 @pytest.fixture

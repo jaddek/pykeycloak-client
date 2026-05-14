@@ -3,7 +3,7 @@ from dataclasses import dataclass, field
 
 import pytest
 
-from pykeycloak.core.mapper import PyKeycloakDataMapper, dataclass_from_dict
+from pykeycloak_client.core.mapper import PyKeycloakDataMapper, dataclass_from_dict
 
 
 @pytest.fixture(autouse=True)

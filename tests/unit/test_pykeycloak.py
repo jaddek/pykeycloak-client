@@ -1,8 +1,8 @@
 # SPDX-License-Identifier: MIT
 from unittest.mock import MagicMock, patch
 
-from pykeycloak.core.realm import RealmClient
-from pykeycloak.pykeycloak import PyKeycloak
+from pykeycloak_client.core.realm import RealmClient
+from pykeycloak_client.pykeycloak import PyKeycloak
 
 
 class TestPyKeycloak:
@@ -25,14 +25,14 @@ class TestPyKeycloak:
         )
 
         with (
-            patch("pykeycloak.pykeycloak.get_headers_factory", return_value="headers"),
+            patch("pykeycloak_client.pykeycloak_client.get_headers_factory", return_value="headers"),
             patch(
-                "pykeycloak.pykeycloak.get_keycloak_http_client_from_env",
+                "pykeycloak_client.pykeycloak_client.get_keycloak_http_client_from_env",
                 return_value="client",
             ),
-            patch("pykeycloak.pykeycloak.get_response_validator", return_value="validator"),
-            patch("pykeycloak.pykeycloak.KeycloakInMemoryProviderAsync") as provider_cls,
-            patch("pykeycloak.pykeycloak.KeycloakServiceFactory") as factory_cls,
+            patch("pykeycloak_client.pykeycloak_client.get_response_validator", return_value="validator"),
+            patch("pykeycloak_client.pykeycloak_client.KeycloakInMemoryProviderAsync") as provider_cls,
+            patch("pykeycloak_client.pykeycloak_client.KeycloakServiceFactory") as factory_cls,
         ):
             provider_instance = MagicMock()
             provider_cls.return_value = provider_instance

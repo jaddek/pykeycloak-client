@@ -5,8 +5,8 @@ from unittest.mock import MagicMock
 import pytest
 from httpx import Headers
 
-from pykeycloak.core.exceptions import KeycloakDecodingError
-from pykeycloak.core.response import KeycloakResponse, KeycloakResponseBuilder
+from pykeycloak_client.core.exceptions import KeycloakDecodingError
+from pykeycloak_client.core.response import KeycloakResponse, KeycloakResponseBuilder
 
 
 class TestKeycloakResponse:

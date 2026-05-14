@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: MIT
 import pytest
 
-from pykeycloak.core.helpers import (
+from pykeycloak_client.core.helpers import (
     RoleHelper,
     dataclass_from_dict,
     getenv_bool,

@@ -4,7 +4,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 import pytest
 from httpx import ConnectError, Request
 
-from pykeycloak.core.clients import HttpMethod, KeycloakHttpClientAsync, RetryPolicy
+from pykeycloak_client.core.clients import HttpMethod, KeycloakHttpClientAsync, RetryPolicy
 
 
 class TestHttpMethod:
@@ -126,7 +126,7 @@ class TestRequestAsync:
         policy = RetryPolicy(max_attempts=3, base_delay_seconds=0.0, jitter_seconds=0.0)
         kc = KeycloakHttpClientAsync(client=mock_client, retry_policy=policy)
 
-        with patch("pykeycloak.core.clients.asyncio.sleep", new=AsyncMock()) as sleep_mock:
+        with patch("pykeycloak_client.core.clients.asyncio.sleep", new=AsyncMock()) as sleep_mock:
             result = await kc.request_async(HttpMethod.GET, "/url")
 
         assert result is second_response
@@ -143,7 +143,7 @@ class TestRequestAsync:
         policy = RetryPolicy(max_attempts=3, base_delay_seconds=0.0, jitter_seconds=0.0)
         kc = KeycloakHttpClientAsync(client=mock_client, retry_policy=policy)
 
-        with patch("pykeycloak.core.clients.asyncio.sleep", new=AsyncMock()) as sleep_mock:
+        with patch("pykeycloak_client.core.clients.asyncio.sleep", new=AsyncMock()) as sleep_mock:
             result = await kc.request_async(HttpMethod.POST, "/url")
 
         assert result is first_response
@@ -163,7 +163,7 @@ class TestRequestAsync:
         policy = RetryPolicy(max_attempts=2, base_delay_seconds=0.0, jitter_seconds=0.0)
         kc = KeycloakHttpClientAsync(client=mock_client, retry_policy=policy)
 
-        with patch("pykeycloak.core.clients.asyncio.sleep", new=AsyncMock()) as sleep_mock:
+        with patch("pykeycloak_client.core.clients.asyncio.sleep", new=AsyncMock()) as sleep_mock:
             result = await kc.request_async(HttpMethod.GET, "/url")
 
         assert result is second_response
@@ -220,7 +220,7 @@ class TestRetryPolicy:
             jitter_seconds=0.5,
         )
         kc = KeycloakHttpClientAsync(client=MagicMock(), retry_policy=policy)
-        monkeypatch.setattr("pykeycloak.core.clients.os.urandom", lambda n: b"\xff\xff")
+        monkeypatch.setattr("pykeycloak_client.core.clients.os.urandom", lambda n: b"\xff\xff")
 
         delay = kc._compute_retry_delay(1)
         assert delay >= 0.1

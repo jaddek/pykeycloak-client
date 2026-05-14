@@ -3,11 +3,11 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from pykeycloak.core.clients import HttpMethod
-from pykeycloak.core.exceptions import KeycloakUnexpectedBehaviourException
-from pykeycloak.providers._roles import RolesProvider
-from pykeycloak.providers.payloads import RoleAssignPayload, RolePayload
-from pykeycloak.providers.queries import BriefRepresentationQuery
+from pykeycloak_client.core.clients import HttpMethod
+from pykeycloak_client.core.exceptions import KeycloakUnexpectedBehaviourException
+from pykeycloak_client.providers._roles import RolesProvider
+from pykeycloak_client.providers.payloads import RoleAssignPayload, RolePayload
+from pykeycloak_client.providers.queries import BriefRepresentationQuery
 
 
 @pytest.fixture

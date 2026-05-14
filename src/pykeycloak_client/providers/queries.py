@@ -4,11 +4,11 @@ from collections.abc import ItemsView, Iterator
 from dataclasses import dataclass, field, fields
 from typing import Any
 
-from pykeycloak.core.constants import (
+from pykeycloak_client.core.constants import (
     KEYCLOAK_MAX_ROWS_QUERY_LIMIT_DEFAULT,
     KEYCLOAK_PAGINATION_FIRST_DEFAULT,
 )
-from pykeycloak.core.helpers import getenv_int
+from pykeycloak_client.core.helpers import getenv_int
 
 
 @dataclass(kw_only=True)

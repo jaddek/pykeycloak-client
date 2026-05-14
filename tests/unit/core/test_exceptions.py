@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: MIT
 import pytest
 
-from pykeycloak.core.exceptions import (
+from pykeycloak_client.core.exceptions import (
     AccessTokenIsRequiredError,
     KeycloakBadRequestError,
     KeycloakConflictError,

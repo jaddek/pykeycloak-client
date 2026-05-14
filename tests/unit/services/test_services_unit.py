@@ -4,9 +4,9 @@ from uuid import uuid4
 
 import pytest
 
-from pykeycloak.core.enums import UrnIetfOauthUmaTicketResponseModeEnum
-from pykeycloak.core.exceptions import KeycloakException, KeycloakHTTPException
-from pykeycloak.providers.payloads import (
+from pykeycloak_client.core.enums import UrnIetfOauthUmaTicketResponseModeEnum
+from pykeycloak_client.core.exceptions import KeycloakException, KeycloakHTTPException
+from pykeycloak_client.providers.payloads import (
     ClientCredentialsLoginPayload,
     CreateUserPayload,
     PermissionPayload,
@@ -25,8 +25,8 @@ from pykeycloak.providers.payloads import (
     UserUpdateEnablePayload,
     UserUpdatePasswordPayload,
 )
-from pykeycloak.providers.queries import FilterFindPolicyParams, GetUsersQuery
-from pykeycloak.services.services import (
+from pykeycloak_client.providers.queries import FilterFindPolicyParams, GetUsersQuery
+from pykeycloak_client.services.services import (
     AuthService,
     AuthzPermissionService,
     AuthzPolicyService,

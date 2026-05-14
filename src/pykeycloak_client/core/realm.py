@@ -4,8 +4,8 @@
 import base64
 from typing import Self
 
-from pykeycloak.core.helpers import getenv_required
-from pykeycloak.core.validations.uuid import is_uuid
+from pykeycloak_client.core.helpers import getenv_required
+from pykeycloak_client.core.validations.uuid import is_uuid
 
 
 class RealmClient:

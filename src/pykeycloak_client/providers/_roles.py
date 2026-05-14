@@ -4,10 +4,10 @@
 from collections.abc import Awaitable, Callable
 from uuid import UUID
 
-from pykeycloak.core.clients import HttpMethod
-from pykeycloak.core.exceptions import KeycloakUnexpectedBehaviourException
-from pykeycloak.core.protocols import KeycloakResponseProtocol
-from pykeycloak.core.urls import (
+from pykeycloak_client.core.clients import HttpMethod
+from pykeycloak_client.core.exceptions import KeycloakUnexpectedBehaviourException
+from pykeycloak_client.core.protocols import KeycloakResponseProtocol
+from pykeycloak_client.core.urls import (
     REALM_CLIENT_ROLE,
     REALM_CLIENT_ROLES,
     REALM_CLIENT_USER_ROLE_MAPPING,

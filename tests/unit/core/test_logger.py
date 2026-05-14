@@ -1,8 +1,8 @@
 # SPDX-License-Identifier: MIT
 import logging
 
-from pykeycloak.core.logger import SanitizingFilter
-from pykeycloak.core.sanitizer import SensitiveDataSanitizer
+from pykeycloak_client.core.logger import SanitizingFilter
+from pykeycloak_client.core.sanitizer import SensitiveDataSanitizer
 
 
 class TestSanitizingFilter:

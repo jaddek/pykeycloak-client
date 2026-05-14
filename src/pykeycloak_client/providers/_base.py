@@ -3,10 +3,10 @@
 
 from typing import Any
 
-from pykeycloak.core.clients import HttpMethod, KeycloakHttpClientAsync
-from pykeycloak.core.headers import HeadersProtocol
-from pykeycloak.core.protocols import KeycloakResponseProtocol
-from pykeycloak.core.realm import RealmClient
+from pykeycloak_client.core.clients import HttpMethod, KeycloakHttpClientAsync
+from pykeycloak_client.core.headers import HeadersProtocol
+from pykeycloak_client.core.protocols import KeycloakResponseProtocol
+from pykeycloak_client.core.realm import RealmClient
 
 
 class KeycloakProviderBase:

@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: MIT
 import pytest
 
-from pykeycloak.core.validations.uuid import is_uuid
+from pykeycloak_client.core.validations.uuid import is_uuid
 
 
 class TestIsUuid:

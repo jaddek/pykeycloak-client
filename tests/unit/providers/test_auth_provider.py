@@ -3,11 +3,11 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-from pykeycloak.core.clients import HttpMethod
-from pykeycloak.core.exceptions import AccessTokenIsRequiredError
-from pykeycloak.core.token_manager import TokenManager
-from pykeycloak.providers._auth import AuthProvider
-from pykeycloak.providers.payloads import (
+from pykeycloak_client.core.clients import HttpMethod
+from pykeycloak_client.core.exceptions import AccessTokenIsRequiredError
+from pykeycloak_client.core.token_manager import TokenManager
+from pykeycloak_client.providers._auth import AuthProvider
+from pykeycloak_client.providers.payloads import (
     ClientCredentialsLoginPayload,
     RefreshTokenPayload,
     RTPExchangeTokenPayload,
@@ -43,7 +43,7 @@ def auth_provider(base, token_manager):
 def auth_provider_with_valid_token(base, token_manager):
     from datetime import UTC, datetime
 
-    from pykeycloak.core.token_manager import AuthToken
+    from pykeycloak_client.core.token_manager import AuthToken
 
     token = AuthToken(
         access_token="valid-token",
@@ -94,7 +94,7 @@ class TestGetClientAccessToken:
 
     @pytest.mark.asyncio
     async def test_raises_when_no_access_token(self, auth_provider):
-        from pykeycloak.core.token_manager import AuthToken
+        from pykeycloak_client.core.token_manager import AuthToken
 
         empty_token = AuthToken(access_token=None, expires_in=None)
         with patch.object(
@@ -107,9 +107,9 @@ class TestGetClientAccessToken:
 class TestRefreshTokenAsync:
     @pytest.mark.asyncio
     async def test_raises_for_public_client(self, base, token_manager):
-        from pykeycloak.core.headers import HeadersFactory
-        from pykeycloak.core.realm import RealmClient
-        from pykeycloak.providers._base import KeycloakProviderBase
+        from pykeycloak_client.core.headers import HeadersFactory
+        from pykeycloak_client.core.realm import RealmClient
+        from pykeycloak_client.providers._base import KeycloakProviderBase
 
         public_rc = RealmClient(
             realm_name="r",
@@ -147,9 +147,9 @@ class TestRefreshTokenAsync:
 class TestIntrospectTokenAsync:
     @pytest.mark.asyncio
     async def test_raises_for_public_client(self, base, token_manager):
-        from pykeycloak.core.headers import HeadersFactory
-        from pykeycloak.core.realm import RealmClient
-        from pykeycloak.providers._base import KeycloakProviderBase
+        from pykeycloak_client.core.headers import HeadersFactory
+        from pykeycloak_client.core.realm import RealmClient
+        from pykeycloak_client.providers._base import KeycloakProviderBase
 
         public_rc = RealmClient(
             realm_name="r",
@@ -311,9 +311,9 @@ class TestRevokeAsync:
 
     @pytest.mark.asyncio
     async def test_public_client_uses_bearer_auth(self, base, token_manager, mock_kc_client):
-        from pykeycloak.core.headers import HeadersFactory
-        from pykeycloak.core.realm import RealmClient
-        from pykeycloak.providers._base import KeycloakProviderBase
+        from pykeycloak_client.core.headers import HeadersFactory
+        from pykeycloak_client.core.realm import RealmClient
+        from pykeycloak_client.providers._base import KeycloakProviderBase
 
         public_rc = RealmClient(
             realm_name="r",

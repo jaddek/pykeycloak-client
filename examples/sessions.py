@@ -2,7 +2,7 @@ import asyncio
 
 from _common import default_realm_client, get_keycloak
 
-from pykeycloak.providers.queries import PaginationQuery
+from pykeycloak_client.providers.queries import PaginationQuery
 
 
 async def main():

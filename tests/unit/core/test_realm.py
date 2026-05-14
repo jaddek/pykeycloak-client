@@ -3,7 +3,7 @@ import base64
 
 import pytest
 
-from pykeycloak.core.realm import RealmClient
+from pykeycloak_client.core.realm import RealmClient
 
 VALID_UUID = "550e8400-e29b-41d4-a716-446655440000"
 

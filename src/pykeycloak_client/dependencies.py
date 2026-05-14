@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, Protocol
 
 from httpx import AsyncClient, AsyncHTTPTransport
 
-from pykeycloak.services.services import (
+from pykeycloak_client.services.services import (
     AuthService,
     AuthzPermissionService,
     AuthzPolicyService,
@@ -193,7 +193,7 @@ def get_response_validator() -> KeycloakResponseValidatorProtocol:
 
 
 def get_package_name() -> str:
-    return "pykeycloak"
+    return "pykeycloak_client"
 
 
 def get_default_user_agent() -> dict[str, str]:

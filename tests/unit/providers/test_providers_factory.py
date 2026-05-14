@@ -1,8 +1,8 @@
 # SPDX-License-Identifier: MIT
 from unittest.mock import AsyncMock, MagicMock
 
-from pykeycloak.core.realm import RealmClient
-from pykeycloak.providers.providers import KeycloakProviderAsync
+from pykeycloak_client.core.realm import RealmClient
+from pykeycloak_client.providers.providers import KeycloakProviderAsync
 
 
 class TestKeycloakProviderAsync:

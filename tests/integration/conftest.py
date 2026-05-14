@@ -5,9 +5,9 @@ from collections.abc import AsyncGenerator
 
 import pytest
 
-from pykeycloak.core.realm import RealmClient
-from pykeycloak.providers.payloads import UserCredentialsLoginPayload
-from pykeycloak.pykeycloak import PyKeycloak
+from pykeycloak_client.core.realm import RealmClient
+from pykeycloak_client.providers.payloads import UserCredentialsLoginPayload
+from pykeycloak_client.pykeycloak import PyKeycloak
 
 REQUIRED_ENV_VARS = (
     "PYKEYCLOAK_INTEGRATION_ENABLED",

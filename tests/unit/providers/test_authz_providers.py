@@ -3,21 +3,21 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from pykeycloak.core.clients import HttpMethod
-from pykeycloak.providers._authz import (
+from pykeycloak_client.core.clients import HttpMethod
+from pykeycloak_client.providers._authz import (
     AuthzPermissionProvider,
     AuthzPolicyProvider,
     AuthzResourceProvider,
     AuthzScopeProvider,
     AuthzSettingsProvider,
 )
-from pykeycloak.providers.payloads import (
+from pykeycloak_client.providers.payloads import (
     PermissionPayload,
     PermissionScopesPayload,
     ResourcePayload,
     RolePolicyPayload,
 )
-from pykeycloak.providers.queries import (
+from pykeycloak_client.providers.queries import (
     FilterFindPolicyParams,
     FindPermissionQuery,
     ResourcesListQuery,

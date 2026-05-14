@@ -5,8 +5,8 @@ from uuid import UUID
 
 from httpx._types import HeaderTypes
 
-from pykeycloak.core.types import JsonData
-from pykeycloak.providers.payloads import (
+from pykeycloak_client.core.types import JsonData
+from pykeycloak_client.providers.payloads import (
     CreateUserPayload,
     ObtainTokenPayload,
     PermissionPayload,
@@ -25,7 +25,7 @@ from pykeycloak.providers.payloads import (
     UserUpdateEnablePayload,
     UserUpdatePasswordPayload,
 )
-from pykeycloak.providers.queries import (
+from pykeycloak_client.providers.queries import (
     BriefRepresentationQuery,
     FilterFindPolicyParams,
     FindPermissionQuery,
@@ -36,7 +36,7 @@ from pykeycloak.providers.queries import (
 )
 
 if TYPE_CHECKING:
-    from pykeycloak.services.services import (
+    from pykeycloak_client.services.services import (
         AuthService,
         AuthzPermissionService,
         AuthzPolicyService,

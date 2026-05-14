@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: MIT
 import pytest
 
-from pykeycloak.core.sanitizer import SensitiveDataSanitizer
+from pykeycloak_client.core.sanitizer import SensitiveDataSanitizer
 
 
 @pytest.fixture

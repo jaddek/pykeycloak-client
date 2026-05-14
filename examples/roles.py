@@ -4,7 +4,7 @@ from time import time
 
 from _common import default_realm_client, get_keycloak
 
-from pykeycloak.providers.payloads import RoleAssignPayload, RolePayload
+from pykeycloak_client.providers.payloads import RoleAssignPayload, RolePayload
 
 prefix_for_updated_role = str(time())
 

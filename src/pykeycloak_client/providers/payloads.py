@@ -6,7 +6,7 @@ from dataclasses import asdict, dataclass, field, fields
 from typing import Any
 from uuid import UUID
 
-from pykeycloak.core.enums import (
+from pykeycloak_client.core.enums import (
     GrantTypeEnum,
     LogicEnum,
     UrnIetfOauthUmaTicketPermissionResourceFormatEnum,

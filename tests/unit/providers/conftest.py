@@ -3,9 +3,9 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from pykeycloak.core.headers import HeadersFactory
-from pykeycloak.core.realm import RealmClient
-from pykeycloak.providers._base import KeycloakProviderBase
+from pykeycloak_client.core.headers import HeadersFactory
+from pykeycloak_client.core.realm import RealmClient
+from pykeycloak_client.providers._base import KeycloakProviderBase
 
 VALID_UUID = "550e8400-e29b-41d4-a716-446655440000"
 REALM = "myrealm"

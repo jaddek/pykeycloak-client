@@ -3,8 +3,8 @@ import os
 
 import pytest
 
-from pykeycloak.core.enums import UrnIetfOauthUmaTicketResponseModeEnum
-from pykeycloak.providers.payloads import (
+from pykeycloak_client.core.enums import UrnIetfOauthUmaTicketResponseModeEnum
+from pykeycloak_client.providers.payloads import (
     CreateUserPayload,
     RefreshTokenPayload,
     UMAAuthorizationPayload,
