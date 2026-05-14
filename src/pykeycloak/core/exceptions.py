@@ -40,17 +40,34 @@ class KeycloakHTTPException(KeycloakException):
         message: str = "",
         status_code: int | None = None,
         content: bytes | None = None,
+        endpoint: str | None = None,
+        realm: str | None = None,
+        request_id: str | None = None,
+        retriable: bool = False,
     ) -> None:
         Exception.__init__(self, message)
 
         self.status_code = status_code
         self.content = content
         self.message = message
+        self.endpoint = endpoint
+        self.realm = realm
+        self.request_id = request_id
+        self.retriable = retriable
 
     def __str__(self) -> str:
-        if self.status_code is not None:
-            return f"{self.status_code}: {self.message}"
-        return f"{self.message}"
+        prefix = f"{self.status_code}: " if self.status_code is not None else ""
+        details = []
+        if self.endpoint:
+            details.append(f"endpoint={self.endpoint}")
+        if self.realm:
+            details.append(f"realm={self.realm}")
+        if self.request_id:
+            details.append(f"request_id={self.request_id}")
+        details.append(f"retriable={self.retriable}")
+
+        details_suffix = f" ({', '.join(details)})" if details else ""
+        return f"{prefix}{self.message}{details_suffix}"
 
 
 class KeycloakError(KeycloakHTTPException): ...

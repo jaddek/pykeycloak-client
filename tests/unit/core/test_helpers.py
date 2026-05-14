@@ -143,7 +143,7 @@ class TestRoleHelper:
         assert RoleHelper.hide_prefix("admin") == "admin"
 
     def test_get_public_prefix(self):
-        assert RoleHelper.get_public_refix() == "public_role__"
+        assert RoleHelper.get_public_prefix() == "public_role__"
 
     def test_add_then_hide_is_identity(self):
         name = "some_role"

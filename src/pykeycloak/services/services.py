@@ -4,7 +4,7 @@
 import asyncio
 import logging
 import math
-from collections.abc import Iterable
+from collections.abc import Iterable, Mapping
 from dataclasses import replace
 from typing import Any, Final, cast
 from uuid import UUID
@@ -218,7 +218,41 @@ class UsersService(BaseService[UsersProviderProtocol]):
             except (ValueError, TypeError):
                 return None
 
-        location = response.headers.get("Location")
+        location: str | None = None
+        headers = response.headers
+        if isinstance(headers, Mapping):
+            for key, value in headers.items():
+                normalized_key = (
+                    key.decode("utf-8", errors="ignore")
+                    if isinstance(key, bytes)
+                    else str(key)
+                )
+                if normalized_key.lower() != "location":
+                    continue
+                location = (
+                    value.decode("utf-8", errors="ignore")
+                    if isinstance(value, bytes)
+                    else str(value)
+                )
+                break
+        else:
+            for key, value in headers:
+                normalized_key = (
+                    key.decode("utf-8", errors="ignore")
+                    if isinstance(key, bytes)
+                    else str(key)
+                )
+                if normalized_key.lower() != "location":
+                    continue
+                location = (
+                    value.decode("utf-8", errors="ignore")
+                    if isinstance(value, bytes)
+                    else str(value)
+                )
+                break
+
+        if location is None:
+            raise ValueError("Location header is missing in create user response")
 
         user_uuid = extract_uuid(location)
 

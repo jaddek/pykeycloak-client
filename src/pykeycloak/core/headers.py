@@ -1,16 +1,16 @@
 # SPDX-License-Identifier: MIT
 # Copyright (c) 2026 Anton "Tony" Nazarov <tonynazarov+dev@gmail.com>
 
-from enum import Enum
+from enum import StrEnum
 from typing import Protocol
 
 
-class ContentTypesEnums(str, Enum):
+class ContentTypesEnums(StrEnum):
     FORM_URLENCODED = "application/x-www-form-urlencoded"
     JSON = "application/json"
 
 
-class HeaderKeys(str, Enum):
+class HeaderKeys(StrEnum):
     CONTENT_TYPE = "Content-Type"
     AUTHORIZATION = "Authorization"
 

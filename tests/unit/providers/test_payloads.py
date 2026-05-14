@@ -1,8 +1,6 @@
 # SPDX-License-Identifier: MIT
 import json
 
-import pytest
-
 from pykeycloak.core.enums import (
     GrantTypeEnum,
     UrnIetfOauthUmaTicketPermissionResourceFormatEnum,

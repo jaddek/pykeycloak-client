@@ -205,7 +205,7 @@ class ClientSettings:
         return cls(
             base_url=getenv_required_url("KEYCLOAK_BASE_URL"),
             verify=getenv_bool(
-                "KEYCLOAK_HTTPX_HTTP_VERIFY",
+                "KEYCLOAK_HTTPX_CLIENT_PARAMS_SSL_VERIFY",
                 KEYCLOAK_HTTPX_CLIENT_PARAMS_SSL_VERIFY_DEFAULT,
             ),
             http1=getenv_bool(

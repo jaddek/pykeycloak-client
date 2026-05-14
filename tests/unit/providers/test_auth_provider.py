@@ -9,7 +9,6 @@ from pykeycloak.core.token_manager import TokenManager
 from pykeycloak.providers._auth import AuthProvider
 from pykeycloak.providers.payloads import (
     ClientCredentialsLoginPayload,
-    ConfidentialClientRevokePayload,
     RefreshTokenPayload,
     RTPExchangeTokenPayload,
     RTPIntrospectionPayload,

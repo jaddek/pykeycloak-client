@@ -29,6 +29,8 @@ def make_response(status_code, text="", content=b"", json_data=None, headers=Non
         resp.json.return_value = json_data
     else:
         resp.json.side_effect = ValueError("No JSON")
+    resp.request = MagicMock()
+    resp.request.url = "https://kc.example.com/realms/myrealm/protocol/openid-connect/token"
     return resp
 
 
@@ -106,3 +108,37 @@ class TestValidateErrors:
         with pytest.raises(KeycloakConflictError) as exc_info:
             validator.validate(resp)
         assert exc_info.value.content == b"conflict"
+
+    def test_exception_contains_structured_context(self, validator):
+        resp = make_response(
+            503,
+            text="service unavailable",
+            content=b"service unavailable",
+            headers={"x-request-id": "req-123"},
+        )
+        with pytest.raises(KeycloakServerError) as exc_info:
+            validator.validate(resp)
+
+        assert exc_info.value.endpoint == "https://kc.example.com/realms/myrealm/protocol/openid-connect/token"
+        assert exc_info.value.realm == "myrealm"
+        assert exc_info.value.request_id == "req-123"
+        assert exc_info.value.retriable is True
+
+    def test_traceparent_has_priority_for_request_id(self, validator):
+        resp = make_response(
+            503,
+            text="service unavailable",
+            content=b"service unavailable",
+            headers={
+                "traceparent": "00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-00",
+                "x-request-id": "req-123",
+                "x-ms-request-id": "ms-123",
+            },
+        )
+        with pytest.raises(KeycloakServerError) as exc_info:
+            validator.validate(resp)
+
+        assert (
+            exc_info.value.request_id
+            == "00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-00"
+        )

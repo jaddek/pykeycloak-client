@@ -78,5 +78,5 @@ class RoleHelper:
         return f"{RoleHelper.PUBLIC_ROLE_PREFIX}{role_name}"
 
     @staticmethod
-    def get_public_refix() -> str:
+    def get_public_prefix() -> str:
         return RoleHelper.PUBLIC_ROLE_PREFIX

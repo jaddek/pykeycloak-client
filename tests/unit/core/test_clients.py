@@ -2,8 +2,9 @@
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
+from httpx import ConnectError, Request
 
-from pykeycloak.core.clients import HttpMethod, KeycloakHttpClientAsync
+from pykeycloak.core.clients import HttpMethod, KeycloakHttpClientAsync, RetryPolicy
 
 
 class TestHttpMethod:
@@ -112,6 +113,62 @@ class TestRequestAsync:
         mock_client.request.assert_awaited_once_with(
             method="POST", url="/url", headers={"X-Custom": "value"}, json={"key": "val"}
         )
+
+    @pytest.mark.asyncio
+    async def test_retries_on_retriable_status_for_allowed_method(self):
+        mock_client = AsyncMock()
+        first_response = MagicMock()
+        first_response.status_code = 503
+        second_response = MagicMock()
+        second_response.status_code = 200
+        mock_client.request = AsyncMock(side_effect=[first_response, second_response])
+
+        policy = RetryPolicy(max_attempts=3, base_delay_seconds=0.0, jitter_seconds=0.0)
+        kc = KeycloakHttpClientAsync(client=mock_client, retry_policy=policy)
+
+        with patch("pykeycloak.core.clients.asyncio.sleep", new=AsyncMock()) as sleep_mock:
+            result = await kc.request_async(HttpMethod.GET, "/url")
+
+        assert result is second_response
+        assert mock_client.request.await_count == 2
+        sleep_mock.assert_awaited_once()
+
+    @pytest.mark.asyncio
+    async def test_does_not_retry_on_non_allowed_method(self):
+        mock_client = AsyncMock()
+        first_response = MagicMock()
+        first_response.status_code = 503
+        mock_client.request = AsyncMock(return_value=first_response)
+
+        policy = RetryPolicy(max_attempts=3, base_delay_seconds=0.0, jitter_seconds=0.0)
+        kc = KeycloakHttpClientAsync(client=mock_client, retry_policy=policy)
+
+        with patch("pykeycloak.core.clients.asyncio.sleep", new=AsyncMock()) as sleep_mock:
+            result = await kc.request_async(HttpMethod.POST, "/url")
+
+        assert result is first_response
+        assert mock_client.request.await_count == 1
+        sleep_mock.assert_not_called()
+
+    @pytest.mark.asyncio
+    async def test_retries_on_request_error(self):
+        mock_client = AsyncMock()
+        req = Request(method="GET", url="https://kc.example.com/health")
+        second_response = MagicMock()
+        second_response.status_code = 200
+        mock_client.request = AsyncMock(
+            side_effect=[ConnectError("boom", request=req), second_response]
+        )
+
+        policy = RetryPolicy(max_attempts=2, base_delay_seconds=0.0, jitter_seconds=0.0)
+        kc = KeycloakHttpClientAsync(client=mock_client, retry_policy=policy)
+
+        with patch("pykeycloak.core.clients.asyncio.sleep", new=AsyncMock()) as sleep_mock:
+            result = await kc.request_async(HttpMethod.GET, "/url")
+
+        assert result is second_response
+        assert mock_client.request.await_count == 2
+        sleep_mock.assert_awaited_once()
 
 
 class TestContextManager:

@@ -64,7 +64,7 @@ ignore = [
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401"]
-"tests/**/*.py" = ["S101"]
+"tests/**/*.py" = ["S"]
 
 [tool.mypy]
 python_version = "3.13"
@@ -80,13 +80,6 @@ warn_unused_ignores = true
 warn_no_return = true
 warn_unreachable = true
 strict_equality = true
-
-[[tool.mypy.overrides]]
-module = [
-    "tests.*",
-    "test.*",
-]
-disallow_untyped_defs = false
 
 [tool.pytest.ini_options]
 minversion = "8.0"

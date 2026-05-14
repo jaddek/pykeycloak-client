@@ -54,7 +54,7 @@ if TYPE_CHECKING:
 
 class KeycloakResponseProtocol(Protocol):
     status_code: int
-    headers: HeaderTypes | None = (None,)
+    headers: HeaderTypes | None = None
 
     @property
     def text(self) -> str: ...

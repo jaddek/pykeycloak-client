@@ -2,14 +2,11 @@
 import pytest
 
 from pykeycloak.providers.queries import (
-    AdminRealmClientRoleGroupQuery,
     AdminRolesQuery,
-    BaseQuery,
     BriefRepresentationQuery,
     FilterFindPolicyParams,
     FilterQueryParams,
     FindPermissionQuery,
-    GetUsersCountQuery,
     GetUsersQuery,
     GroupListQuery,
     GroupMemberListQuery,

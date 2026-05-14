@@ -57,18 +57,30 @@ class TestKeycloakUnexpectedBehaviourException:
 class TestKeycloakHTTPException:
     def test_str_with_status_code(self):
         exc = KeycloakHTTPException(message="not found", status_code=404)
-        assert str(exc) == "404: not found"
+        assert str(exc) == "404: not found (retriable=False)"
 
     def test_str_without_status_code(self):
         exc = KeycloakHTTPException(message="error")
-        assert str(exc) == "error"
+        assert str(exc) == "error (retriable=False)"
 
     def test_attributes(self):
         content = b"error body"
-        exc = KeycloakHTTPException(message="msg", status_code=500, content=content)
+        exc = KeycloakHTTPException(
+            message="msg",
+            status_code=500,
+            content=content,
+            endpoint="https://kc.example.com/realms/master/protocol/openid-connect/token",
+            realm="master",
+            request_id="req-1",
+            retriable=True,
+        )
         assert exc.status_code == 500
         assert exc.content == content
         assert exc.message == "msg"
+        assert exc.endpoint == "https://kc.example.com/realms/master/protocol/openid-connect/token"
+        assert exc.realm == "master"
+        assert exc.request_id == "req-1"
+        assert exc.retriable is True
 
 
 class TestExceptionHierarchy:

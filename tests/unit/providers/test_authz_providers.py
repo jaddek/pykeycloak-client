@@ -17,7 +17,11 @@ from pykeycloak.providers.payloads import (
     ResourcePayload,
     RolePolicyPayload,
 )
-from pykeycloak.providers.queries import FilterFindPolicyParams, FindPermissionQuery, ResourcesListQuery
+from pykeycloak.providers.queries import (
+    FilterFindPolicyParams,
+    FindPermissionQuery,
+    ResourcesListQuery,
+)
 
 
 @pytest.fixture

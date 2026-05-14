@@ -1,8 +1,10 @@
+from collections.abc import Mapping
 from functools import cached_property
 from importlib.metadata import PackageNotFoundError, version
 from typing import TYPE_CHECKING, Protocol
 
 from httpx import AsyncClient, AsyncHTTPTransport
+from httpx._types import HeaderTypes
 
 from pykeycloak.services.services import (
     AuthService,
@@ -211,11 +213,27 @@ def get_async_client(
     if not client_settings:
         client_settings = ClientSettings(headers=get_default_user_agent())
 
-    if not client_settings.headers:
-        client_settings.headers = get_default_user_agent()
+    def _coerce_headers(headers: HeaderTypes | None) -> dict[str, str]:
+        if headers is None:
+            return {}
+        if isinstance(headers, Mapping):
+            return {
+                str(k, "utf-8") if isinstance(k, bytes) else str(k): (
+                    str(v, "utf-8") if isinstance(v, bytes) else str(v)
+                )
+                for k, v in headers.items()
+            }
+        return {
+            str(k, "utf-8") if isinstance(k, bytes) else str(k): (
+                str(v, "utf-8") if isinstance(v, bytes) else str(v)
+            )
+            for k, v in headers
+        }
 
-    if not client_settings.headers.get("User-Agent"):
-        client_settings.headers |= get_default_user_agent()
+    merged_headers = _coerce_headers(client_settings.headers)
+    if "User-Agent" not in merged_headers:
+        merged_headers.update(get_default_user_agent())
+    client_settings.headers = merged_headers
 
     client_settings.transport = transport
 
