@@ -239,7 +239,7 @@ class TokenAutoRefresher:
             return await method(
                 instance,
                 *args,
-                access_token=token.access_token,  # type: ignore[arg-type]
+                access_token=token.access_token,  # ty: ignore[invalid-argument-type]
                 **kwargs,
             )
 

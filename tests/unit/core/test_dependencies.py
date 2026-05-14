@@ -1,9 +1,9 @@
 # SPDX-License-Identifier: MIT
+from importlib.metadata import PackageNotFoundError
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 from httpx import Headers
-from importlib.metadata import PackageNotFoundError
 
 from pykeycloak.core.realm import RealmClient
 from pykeycloak.core.settings import ClientSettings

@@ -1,4 +1,4 @@
-from collections.abc import Mapping
+from collections.abc import Mapping, Sequence
 from functools import cached_property
 from importlib.metadata import PackageNotFoundError, version
 from typing import TYPE_CHECKING, Protocol
@@ -33,9 +33,10 @@ from .core.settings import ClientSettings, HttpTransportSettings
 from .core.validator import KeycloakResponseValidator
 
 type HeaderTypes = (
-    Mapping[str | bytes, str | bytes]
-    | list[tuple[str | bytes, str | bytes]]
-    | tuple[tuple[str | bytes, str | bytes], ...]
+    Mapping[str, str]
+    | Mapping[bytes, bytes]
+    | Sequence[tuple[str, str]]
+    | Sequence[tuple[bytes, bytes]]
 )
 
 

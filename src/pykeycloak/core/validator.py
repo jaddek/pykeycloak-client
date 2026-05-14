@@ -109,4 +109,4 @@ class KeycloakResponseValidator:
 
 
 if TYPE_CHECKING:
-    _: KeycloakResponseValidatorProtocol = type[KeycloakResponseValidator]
+    _: KeycloakResponseValidatorProtocol = KeycloakResponseValidator()

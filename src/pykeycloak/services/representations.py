@@ -18,8 +18,9 @@ class Representation:
             source_key = f.metadata.get("alias", f.name)
             if source_key in data:
                 val = data[source_key]
-                if hasattr(f.type, "from_dict") and isinstance(val, dict):
-                    init_kwargs[f.name] = f.type.from_dict(val)
+                from_dict = getattr(f.type, "from_dict", None)
+                if callable(from_dict) and isinstance(val, dict):
+                    init_kwargs[f.name] = from_dict(val)
                 else:
                     init_kwargs[f.name] = val
         return cls(**init_kwargs)

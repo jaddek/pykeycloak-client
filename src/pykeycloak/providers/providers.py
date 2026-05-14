@@ -1,11 +1,8 @@
 # SPDX-License-Identifier: MIT
 # Copyright (c) 2026 Anton "Tony" Nazarov <tonynazarov+dev@gmail.com>
 
-from typing import TYPE_CHECKING
-
 from pykeycloak.core.clients import KeycloakHttpClientAsync
 from pykeycloak.core.headers import HeadersProtocol
-from pykeycloak.core.protocols import KeycloakProviderProtocol
 from pykeycloak.core.realm import RealmClient
 from pykeycloak.core.token_manager import TokenManager
 
@@ -111,8 +108,3 @@ class KeycloakProviderAsync:
 
 
 class KeycloakInMemoryProviderAsync(KeycloakProviderAsync): ...
-
-
-if TYPE_CHECKING:
-    _ch_kpa: KeycloakProviderProtocol = type[KeycloakProviderAsync]
-    _ch_kpa_im: KeycloakProviderProtocol = type[KeycloakInMemoryProviderAsync]
