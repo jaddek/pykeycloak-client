@@ -237,6 +237,35 @@ token = await pkc.get('otago_client').auth.refresh_token_async(
 )
 ```
 
+## Integration Smoke Tests
+
+Integration tests are disabled by default and run only against a real Keycloak instance.
+
+Required environment variables:
+
+```shell
+PYKEYCLOAK_INTEGRATION_ENABLED=1
+KEYCLOAK_BASE_URL=http://localhost:8080
+KEYCLOAK_REALM_IT_REALM_NAME=master
+KEYCLOAK_REALM_IT_CLIENT_UUID=<client-uuid>
+KEYCLOAK_REALM_IT_CLIENT_ID=<client-id>
+KEYCLOAK_REALM_IT_CLIENT_SECRET=<client-secret>
+```
+
+Optional variables for user login + UMA smoke test:
+
+```shell
+KEYCLOAK_IT_USERNAME=<username>
+KEYCLOAK_IT_PASSWORD=<password>
+KEYCLOAK_IT_UMA_PERMISSIONS=/resource#view,/resource#update
+```
+
+Run:
+
+```bash
+uv run pytest tests/integration -m integration -vv -s
+```
+
 ### Token Introspection
 
 To introspect a token, use the `introspect_async` method:

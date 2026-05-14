@@ -87,6 +87,9 @@ addopts = "-ra -q --strict-markers --strict-config"
 testpaths = ["tests"]
 python_files = ["test_*.py", "*_test.py"]
 asyncio_mode = "auto"
+markers = [
+    "integration: integration tests against a real Keycloak instance",
+]
 filterwarnings = [
     "error",
     "ignore::DeprecationWarning",

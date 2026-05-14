@@ -170,6 +170,61 @@ class TestRequestAsync:
         assert mock_client.request.await_count == 2
         sleep_mock.assert_awaited_once()
 
+    @pytest.mark.asyncio
+    async def test_request_error_no_retry_raises(self):
+        mock_client = AsyncMock()
+        req = Request(method="GET", url="https://kc.example.com/health")
+        mock_client.request = AsyncMock(side_effect=ConnectError("boom", request=req))
+        policy = RetryPolicy(max_attempts=1, base_delay_seconds=0.0, jitter_seconds=0.0)
+        kc = KeycloakHttpClientAsync(client=mock_client, retry_policy=policy)
+
+        with pytest.raises(ConnectError):
+            await kc.request_async(HttpMethod.GET, "/url")
+
+
+class TestRetryPolicy:
+    def test_invalid_values_raise(self):
+        with pytest.raises(ValueError, match="max_attempts"):
+            RetryPolicy(max_attempts=0)
+        with pytest.raises(ValueError, match="base_delay_seconds"):
+            RetryPolicy(base_delay_seconds=-1.0)
+        with pytest.raises(ValueError, match="max_delay_seconds"):
+            RetryPolicy(max_delay_seconds=-1.0)
+        with pytest.raises(ValueError, match="jitter_seconds"):
+            RetryPolicy(jitter_seconds=-1.0)
+
+    def test_with_env_parses_methods(self, monkeypatch):
+        monkeypatch.setenv("KEYCLOAK_HTTP_RETRY_METHODS", "get, post")
+        monkeypatch.setenv("KEYCLOAK_HTTP_RETRY_ENABLED", "false")
+        policy = RetryPolicy.with_env()
+        assert policy.enabled is False
+        assert policy.retry_methods == frozenset({"GET", "POST"})
+
+    def test_internal_retry_branches(self):
+        policy = RetryPolicy(enabled=False, jitter_seconds=0.1)
+        kc = KeycloakHttpClientAsync(client=MagicMock(), retry_policy=policy)
+
+        assert kc._should_retry_status(HttpMethod.GET, 503, 1) is False
+        assert kc._should_retry_exception(HttpMethod.GET, 1) is False
+
+        policy2 = RetryPolicy(enabled=True, retry_methods=frozenset({"POST"}))
+        kc2 = KeycloakHttpClientAsync(client=MagicMock(), retry_policy=policy2)
+        assert kc2._should_retry_status(HttpMethod.GET, 503, 1) is False
+        assert kc2._should_retry_exception(HttpMethod.GET, 1) is False
+
+    def test_compute_retry_delay_jitter_branch(self, monkeypatch):
+        policy = RetryPolicy(
+            enabled=True,
+            base_delay_seconds=0.1,
+            max_delay_seconds=2.0,
+            jitter_seconds=0.5,
+        )
+        kc = KeycloakHttpClientAsync(client=MagicMock(), retry_policy=policy)
+        monkeypatch.setattr("pykeycloak.core.clients.os.urandom", lambda n: b"\xff\xff")
+
+        delay = kc._compute_retry_delay(1)
+        assert delay >= 0.1
+
 
 class TestContextManager:
     @pytest.mark.asyncio
