@@ -34,4 +34,7 @@ nav:
       - Authz Policy: services/authz-policy.md
       - Well-known: services/well-known.md
   - MCP Server: mcp.md
+  - Models:
+      - Payloads: models/payloads.md
+      - Queries: models/queries.md
   - API Reference: api-reference.md
