@@ -39,7 +39,7 @@ endef
 # ========================
 # PHONY Targets
 # ========================
-.PHONY: default help install clean run tests \
+.PHONY: default help install clean run tests mcp-smoke \
         pre-commit pre-commit-install pre-commit-update \
         script-% set-python-version format lint \
         release-bump release-bump-tag
@@ -127,6 +127,11 @@ test-functional: ## Run functional tests
 
 test-with-coverage: ## Run all tests with coverage
 	@$(load_env); $(UV_RUN) pytest tests --cov=src --cov-report=html --cov-report=term -vv -s
+
+mcp-smoke: ## Smoke test for mcp_server.py (compile/import + method discovery)
+	@make set-python-version
+	@KEYCLOAK_BASE_URL=http://localhost PYTHONPATH=src uv run python -m py_compile mcp_server.py
+	@KEYCLOAK_BASE_URL=http://localhost PYTHONPATH=src uv run python -c "import mcp_server; print('server:', mcp_server.mcp.name); mcp_server.keycloak_register(key='smoke', realm_name='smoke-realm', client_uuid='00000000-0000-0000-0000-000000000000', client_id='smoke-client', client_secret='smoke-secret'); keys = mcp_server.keycloak_list_keys()['keys']; assert 'smoke' in keys, f\"Expected 'smoke' in keys, got {keys}\"; methods = mcp_server.keycloak_list_methods('smoke')['methods']; assert 'auth' in methods and 'users' in methods, 'Expected core services in methods'; print('services:', ', '.join(sorted(methods.keys()))); print('mcp-smoke: ok')"
 
 release-bump: ## Sync pyproject version from GITHUB_REF_NAME (vX.Y.Z)
 	@python3 bin/sync_version_from_tag.py

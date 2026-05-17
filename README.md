@@ -64,6 +64,52 @@ The library can be used in 3 different ways:
 2. Use the provider to get a response with content
 3. Use the service to get either raw responses or Representation objects corresponding to the data received from Keycloak
 
+### MCP Server
+
+This repository includes an MCP server: `mcp_server.py`.
+
+Run MCP smoke test:
+
+```bash
+make mcp-smoke
+```
+
+Run server:
+
+```bash
+uv run python mcp_server.py
+```
+
+MCP runtime env vars:
+
+- `MCP_TRANSPORT` (`stdio`, `sse`, or `streamable-http`; default `stdio`)
+- `MCP_HOST` (default `127.0.0.1`)
+- `MCP_PORT` (default `8000`)
+
+Codex MCP config example (`~/.codex/config.toml`):
+
+```toml
+[mcp_servers.pykeycloak]
+command = "uv"
+args = ["run", "python", "mcp_server.py"]
+cwd = "/Users/tonynazarov/Development/Work/PyKeycloak"
+
+[mcp_servers.pykeycloak.env]
+MCP_TRANSPORT = "stdio"
+MCP_HOST = "127.0.0.1"
+MCP_PORT = "8000"
+KEYCLOAK_BASE_URL = "http://127.0.0.1:8080"
+```
+
+Main MCP tools:
+
+- `health`
+- `keycloak_register`
+- `keycloak_register_from_env`
+- `keycloak_list_methods`
+- `keycloak_call`
+- `keycloak_close_all`
+
 ## Constants
 
 *Dynamic environment*

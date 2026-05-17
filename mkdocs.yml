@@ -1,0 +1,32 @@
+site_name: PyKeycloak
+site_description: Async Keycloak client with automated token management
+site_url: https://jaddek.github.io/PyKeycloak/
+repo_url: https://github.com/jaddek/PyKeycloak
+repo_name: jaddek/PyKeycloak
+
+theme:
+  name: material
+  features:
+    - navigation.sections
+    - navigation.top
+    - content.code.copy
+
+markdown_extensions:
+  - admonition
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - tables
+
+nav:
+  - Home: index.md
+  - Quickstart: quickstart.md
+  - Services:
+      - Auth: services/auth.md
+      - Users: services/users.md
+      - Roles: services/roles.md
+      - Sessions: services/sessions.md
+      - Clients: services/clients.md
+      - Authz: services/authz.md
+      - Well-known: services/well-known.md
+  - MCP Server: mcp.md
+  - API Reference: api-reference.md

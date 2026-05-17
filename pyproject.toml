@@ -21,6 +21,7 @@ keywords = ["keycloak", "oauth", "openid", "authentication", "authorization", "a
 
 dependencies = [
     "httpx[http2]>=0.28.0,<0.29.0",
+    "mcp[cli]>=1.27.1",
 ]
 
 [tool.black]
