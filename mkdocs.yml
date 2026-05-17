@@ -22,11 +22,16 @@ nav:
   - Quickstart: quickstart.md
   - Services:
       - Auth: services/auth.md
+      - UMA: services/uma.md
       - Users: services/users.md
       - Roles: services/roles.md
       - Sessions: services/sessions.md
       - Clients: services/clients.md
-      - Authz: services/authz.md
+      - Authz Overview: services/authz.md
+      - Authz Resource: services/authz-resource.md
+      - Authz Scope: services/authz-scope.md
+      - Authz Permission: services/authz-permission.md
+      - Authz Policy: services/authz-policy.md
       - Well-known: services/well-known.md
   - MCP Server: mcp.md
   - API Reference: api-reference.md

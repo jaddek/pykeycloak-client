@@ -1,11 +1,21 @@
-# Authz Services
+# Authz Services Overview
 
-Authorization services are split by concern:
+Authorization support is split across five services:
 
-- `AuthzService` (settings)
-- `AuthzScopeService`
-- `AuthzResourceService`
-- `AuthzPolicyService`
-- `AuthzPermissionService`
+- `AuthzService` for general authorization settings
+- `AuthzResourceService` for resources
+- `AuthzScopeService` for scopes
+- `AuthzPermissionService` for permissions
+- `AuthzPolicyService` for policies
 
-Use the appropriate payload/query dataclasses from `pykeycloak_client.providers.payloads` and `pykeycloak_client.providers.queries`.
+Use dedicated pages for each sub-service:
+
+- Resource: `services/authz-resource.md`
+- Scope: `services/authz-scope.md`
+- Permission: `services/authz-permission.md`
+- Policy: `services/authz-policy.md`
+
+Use payload/query dataclasses from:
+
+- `pykeycloak_client.providers.payloads`
+- `pykeycloak_client.providers.queries`
