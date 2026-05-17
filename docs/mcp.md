@@ -1,6 +1,6 @@
 # MCP Server
 
-This repo includes `mcp_server.py`, which exposes dynamic access to PyKeycloak services via MCP tools.
+This repo includes `mcp_server.py`, which exposes dynamic access to `pykeycloak-client` services via MCP tools.
 
 ## Smoke check
 

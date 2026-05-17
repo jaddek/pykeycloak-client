@@ -1,6 +1,6 @@
-# PyKeycloak
+# pykeycloak-client
 
-PyKeycloak is a library for working with Keycloak that provides asynchronous methods for authentication, token management, and permission handling.
+`pykeycloak-client` is a library for working with Keycloak that provides asynchronous methods for authentication, token management, and permission handling.
 
 ## What's Different from Other Libraries
 
@@ -20,7 +20,7 @@ make install
 
 ## Development and Security Tooling
 
-Runtime users of the library only install `pykeycloak` and its package dependencies.
+Runtime users of the library only install `pykeycloak-client` and its package dependencies.
 
 For contributors (local checks + CI parity), install:
 

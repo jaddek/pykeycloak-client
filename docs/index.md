@@ -1,6 +1,6 @@
-# PyKeycloak
+# pykeycloak-client
 
-PyKeycloak is an async Python client for Keycloak with token management, typed payloads, and service-layer APIs.
+`pykeycloak-client` is an async Python client for Keycloak with token management, typed payloads, and service-layer APIs.
 
 ## What you get
 
