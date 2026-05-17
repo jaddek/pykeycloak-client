@@ -48,7 +48,7 @@ Set `cwd` to your local repository path.
 - `keycloak_call`
 - `keycloak_close_all`
 
-## Examples for 5 AI agents
+## MCP client configuration examples
 
 1. Codex (`~/.codex/config.toml`)
 
@@ -135,7 +135,7 @@ KEYCLOAK_BASE_URL = "http://127.0.0.1:8080"
 }
 ```
 
-After connecting any agent, test with:
+After connecting your MCP client, test with:
 
 1. `health`
 2. `keycloak_register_from_env` (or `keycloak_register`)
