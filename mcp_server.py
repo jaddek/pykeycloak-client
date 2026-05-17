@@ -180,6 +180,69 @@ def _resolve_callable(key: str, method_path: str) -> tuple[Any, inspect.Signatur
     return method, inspect.signature(method)
 
 
+def _stringify_type(annotation: Any) -> str:
+    if annotation is inspect._empty:
+        return "Any"
+    return str(annotation).replace("typing.", "")
+
+
+def _resolve_annotation(annotation: Any) -> Any:
+    if isinstance(annotation, str):
+        return TYPE_REGISTRY.get(annotation, annotation)
+    return annotation
+
+
+def _param_location(annotation: Any, param_name: str) -> str:
+    resolved = _resolve_annotation(annotation)
+    if inspect.isclass(resolved) and dataclasses.is_dataclass(resolved):
+        module_name = getattr(resolved, "__module__", "")
+        if module_name == payloads.__name__:
+            return "body"
+        if module_name == queries.__name__:
+            return "query"
+    if param_name.endswith("_id") or param_name in {"access_token", "refresh_token"}:
+        return "path"
+    return "other"
+
+
+def _dataclass_fields_schema(cls: type[Any]) -> list[dict[str, str]]:
+    result: list[dict[str, str]] = []
+    for field in dataclasses.fields(cls):
+        default = "required"
+        if field.default is not dataclasses.MISSING:
+            default = repr(field.default)
+        elif field.default_factory is not dataclasses.MISSING:  # type: ignore[attr-defined]
+            default = "factory()"
+        result.append(
+            {
+                "name": field.name,
+                "type": _stringify_type(field.type),
+                "default": default,
+            }
+        )
+    return result
+
+
+def _method_schema(signature: inspect.Signature) -> dict[str, Any]:
+    params: list[dict[str, Any]] = []
+    for param_name, param in signature.parameters.items():
+        if param_name == "self":
+            continue
+        resolved = _resolve_annotation(param.annotation)
+        entry: dict[str, Any] = {
+            "name": param_name,
+            "type": _stringify_type(param.annotation),
+            "location": _param_location(param.annotation, param_name),
+            "required": param.default is inspect._empty,
+        }
+        if param.default is not inspect._empty:
+            entry["default"] = repr(param.default)
+        if inspect.isclass(resolved) and dataclasses.is_dataclass(resolved):
+            entry["fields"] = _dataclass_fields_schema(resolved)
+        params.append(entry)
+    return {"params": params}
+
+
 @mcp.tool()
 def health() -> dict[str, Any]:
     """Basic health check tool."""
@@ -234,7 +297,7 @@ def keycloak_list_keys() -> dict[str, Any]:
 def keycloak_list_methods(key: str) -> dict[str, Any]:
     """List available public methods across all services for a registered key."""
     factory = _get_factory(key)
-    methods: dict[str, list[dict[str, str]]] = {}
+    methods: dict[str, list[dict[str, Any]]] = {}
 
     for service_name in SERVICE_NAMES:
         service = getattr(factory, service_name)
@@ -242,10 +305,39 @@ def keycloak_list_methods(key: str) -> dict[str, Any]:
         for name, member in inspect.getmembers(service, callable):
             if name.startswith("_"):
                 continue
-            entries.append({"name": name, "signature": str(inspect.signature(member))})
+            signature = inspect.signature(member)
+            schema = _method_schema(signature)
+            entries.append(
+                {
+                    "name": name,
+                    "signature": str(signature),
+                    "query": [
+                        p for p in schema["params"] if p.get("location") == "query"
+                    ],
+                    "body": [
+                        p for p in schema["params"] if p.get("location") == "body"
+                    ],
+                }
+            )
         methods[service_name] = sorted(entries, key=lambda x: x["name"])
 
     return {"key": key, "methods": methods}
+
+
+@mcp.tool()
+def keycloak_describe_method(key: str, method_path: str) -> dict[str, Any]:
+    """Describe method params including query/body schema for one service method."""
+    _, signature = _resolve_callable(key, method_path)
+    schema = _method_schema(signature)
+    return {
+        "key": key,
+        "method": method_path,
+        "query": [p for p in schema["params"] if p.get("location") == "query"],
+        "body": [p for p in schema["params"] if p.get("location") == "body"],
+        "other": [p for p in schema["params"] if p.get("location") == "other"],
+        "path": [p for p in schema["params"] if p.get("location") == "path"],
+        "params": schema["params"],
+    }
 
 
 @mcp.tool()
