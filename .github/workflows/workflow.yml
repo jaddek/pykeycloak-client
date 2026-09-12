@@ -104,7 +104,7 @@ jobs:
 
   integration-keycloak-matrix:
     runs-on: ubuntu-latest
-    if: github.event_name == 'workflow_dispatch' && inputs.run_integration_matrix
+    if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.run_integration_matrix)
     strategy:
       fail-fast: false
       matrix:
