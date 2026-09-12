@@ -904,10 +904,10 @@ class AuthzResourceService(BaseService[AuthzResourceProviderProtocol]):
 
     async def get_resources_async(
         self, query: ResourcesListQuery | None = None
-    ) -> KeycloakResponse:
+    ) -> list[ResourceRepresentation]:
         data = await self.get_resources_raw_async(query=query)
 
-        return data
+        return dataclass_from_dict(data.body, list[ResourceRepresentation])
 
     async def create_resource_async(self, payload: ResourcePayload) -> KeycloakResponse:
         response = await self._provider.create_resource_async(payload=payload)

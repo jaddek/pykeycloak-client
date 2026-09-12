@@ -3,6 +3,7 @@ import logging
 
 from _common import default_realm_client, get_keycloak
 
+from pykeycloak_client.core.exceptions import KeycloakBadRequestError
 from pykeycloak_client.providers.payloads import (
     UserCredentialsLoginPayload,
 )
@@ -20,9 +21,14 @@ async def main():
 
     await keycloak.auth.client_login_async()
     ## device login flow
-    result = await keycloak.auth.auth_device_async()  # noqa: F841
-
-    print(result)
+    try:
+        result = await keycloak.auth.auth_device_async()  # noqa: F841
+    except KeycloakBadRequestError as exc:
+        if "Device Authorization Grant" not in str(exc):
+            raise
+        print(f"Device login flow unavailable: {exc}")
+    else:
+        print(result)
 
     ## User login
     user_tokens = (

@@ -670,7 +670,8 @@ class TestClientsAndAuthzServices:
         authz_resource_service = AuthzResourceService(
             provider=authz_resource_provider, validator=validator
         )
-        await authz_resource_service.get_resources_async()
+        resources = await authz_resource_service.get_resources_async()
+        assert len(resources) == 0
         await authz_resource_service.create_resource_async(
             payload=ResourcePayload(name="r")
         )

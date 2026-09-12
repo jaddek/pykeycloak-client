@@ -26,7 +26,7 @@ async def main():
 
     # Get all clients raw
     clients_raw = await keycloak.clients.get_clients_raw_async()
-    print(f"Clients raw length: {len(clients_raw)}")
+    print(f"Clients raw length: {len(clients_raw.body)}")
 
     # Get specific client with typed representation
     client = await keycloak.clients.get_client_async()
