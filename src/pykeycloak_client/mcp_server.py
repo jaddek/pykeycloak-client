@@ -2,7 +2,7 @@
 Dynamic MCP server for pykeycloak-client.
 
 Run:
-    uv run python mcp_server.py
+    uv run pykeycloak-mcp
 
 Notes:
 - Exposes registration + method discovery + dynamic invocation for all services.
@@ -20,7 +20,7 @@ from types import UnionType
 from typing import Any, get_args, get_origin
 from uuid import UUID
 
-from mcp.server.fastmcp import FastMCP
+from mcp.server.mcpserver import MCPServer
 
 from pykeycloak_client.core.realm import RealmClient
 from pykeycloak_client.providers import payloads, queries
@@ -30,7 +30,7 @@ MCP_HOST = os.getenv("MCP_HOST", "127.0.0.1")
 MCP_PORT = int(os.getenv("MCP_PORT", "8000"))
 MCP_TRANSPORT = os.getenv("MCP_TRANSPORT", "stdio")
 
-mcp = FastMCP("pykeycloak-mcp", host=MCP_HOST, port=MCP_PORT)
+mcp = MCPServer("pykeycloak-mcp")
 pkc = PyKeycloak()
 
 SERVICE_NAMES = (
@@ -301,7 +301,7 @@ def keycloak_list_methods(key: str) -> dict[str, Any]:
 
     for service_name in SERVICE_NAMES:
         service = getattr(factory, service_name)
-        entries: list[dict[str, str]] = []
+        entries: list[dict[str, Any]] = []
         for name, member in inspect.getmembers(service, callable):
             if name.startswith("_"):
                 continue
@@ -384,7 +384,14 @@ async def keycloak_close_all() -> dict[str, Any]:
 
 
 def main() -> None:
-    mcp.run(transport=MCP_TRANSPORT)
+    if MCP_TRANSPORT == "stdio":
+        mcp.run(transport="stdio")
+    elif MCP_TRANSPORT == "sse":
+        mcp.run(transport="sse", host=MCP_HOST, port=MCP_PORT)
+    elif MCP_TRANSPORT == "streamable-http":
+        mcp.run(transport="streamable-http", host=MCP_HOST, port=MCP_PORT)
+    else:
+        raise ValueError("MCP_TRANSPORT must be 'stdio', 'sse', or 'streamable-http'")
 
 
 if __name__ == "__main__":

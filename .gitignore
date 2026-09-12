@@ -6,14 +6,14 @@ dist/
 wheels/
 *.egg-info
 
-# Virtual environments
-.venv
-.env.local
-.env.test
+# Virtual environments and local configuration
+.venv/
+.env
+.env.*
+!.env.example
 
 keycloak
 main.py
-.python-version
 .coverage
 
 

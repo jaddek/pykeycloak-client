@@ -20,7 +20,11 @@ make install
 
 ## Development and Security Tooling
 
-Runtime users of the library only install `pykeycloak-client` and its package dependencies.
+Runtime users of the library only install `pykeycloak-client` and its package dependencies. The MCP server is optional; install it with:
+
+```bash
+uv add "pykeycloak-client[mcp]"
+```
 
 For contributors (local checks + CI parity), install:
 
@@ -66,7 +70,7 @@ The library can be used in 3 different ways:
 
 ### MCP Server
 
-This repository includes an MCP server: `mcp_server.py`.
+This repository includes an MCP server: `pykeycloak-mcp`.
 
 Run MCP smoke test:
 
@@ -77,7 +81,7 @@ make mcp-smoke
 Run server:
 
 ```bash
-uv run python mcp_server.py
+uv run pykeycloak-mcp
 ```
 
 MCP runtime env vars:
@@ -91,7 +95,7 @@ Codex MCP config example (`~/.codex/config.toml`):
 ```toml
 [mcp_servers.pykeycloak]
 command = "uv"
-args = ["run", "python", "mcp_server.py"]
+args = ["run", "pykeycloak-mcp"]
 cwd = "path/to/PyKeycloak"
 
 [mcp_servers.pykeycloak.env]
@@ -119,7 +123,7 @@ MCP client configuration examples:
 ```toml
 [mcp_servers.pykeycloak]
 command = "uv"
-args = ["run", "python", "mcp_server.py"]
+args = ["run", "pykeycloak-mcp"]
 cwd = "path/to/PyKeycloak"
 
 [mcp_servers.pykeycloak.env]
@@ -134,7 +138,7 @@ KEYCLOAK_BASE_URL = "http://127.0.0.1:8080"
   "mcpServers": {
     "pykeycloak": {
       "command": "uv",
-      "args": ["run", "python", "mcp_server.py"],
+      "args": ["run", "pykeycloak-mcp"],
       "cwd": "path/to/PyKeycloak",
       "env": {
         "MCP_TRANSPORT": "stdio",
@@ -152,7 +156,7 @@ KEYCLOAK_BASE_URL = "http://127.0.0.1:8080"
   "mcpServers": {
     "pykeycloak": {
       "command": "uv",
-      "args": ["run", "python", "mcp_server.py"],
+      "args": ["run", "pykeycloak-mcp"],
       "cwd": "path/to/PyKeycloak",
       "env": {
         "MCP_TRANSPORT": "stdio",
@@ -170,7 +174,7 @@ KEYCLOAK_BASE_URL = "http://127.0.0.1:8080"
   "mcpServers": {
     "pykeycloak": {
       "command": "uv",
-      "args": ["run", "python", "mcp_server.py"],
+      "args": ["run", "pykeycloak-mcp"],
       "cwd": "path/to/PyKeycloak",
       "env": {
         "MCP_TRANSPORT": "stdio",
@@ -188,7 +192,7 @@ KEYCLOAK_BASE_URL = "http://127.0.0.1:8080"
   "mcpServers": {
     "pykeycloak": {
       "command": "uv",
-      "args": ["run", "python", "mcp_server.py"],
+      "args": ["run", "pykeycloak-mcp"],
       "cwd": "path/to/PyKeycloak",
       "env": {
         "MCP_TRANSPORT": "stdio",

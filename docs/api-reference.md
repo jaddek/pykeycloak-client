@@ -27,7 +27,7 @@ This project exposes API surface through service classes and typed payload/query
 
 For exact callable methods in your installed version:
 
-1. Start MCP server: `uv run python mcp_server.py`
+1. Start MCP server: `uv run pykeycloak-mcp`
 2. Register a key: `keycloak_register_from_env` or `keycloak_register`
 3. List methods: `keycloak_list_methods`
 4. Invoke methods: `keycloak_call`

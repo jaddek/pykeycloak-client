@@ -1,6 +1,6 @@
 # MCP Server
 
-This repo includes `mcp_server.py`, which exposes dynamic access to `pykeycloak-client` services via MCP tools.
+This repo includes `pykeycloak-mcp`, which exposes dynamic access to `pykeycloak-client` services via MCP tools.
 
 ## Smoke check
 
@@ -11,7 +11,7 @@ make mcp-smoke
 ## Run
 
 ```bash
-uv run python mcp_server.py
+uv run pykeycloak-mcp
 ```
 
 ## Runtime env vars
@@ -26,7 +26,7 @@ uv run python mcp_server.py
 ```toml
 [mcp_servers.pykeycloak]
 command = "uv"
-args = ["run", "python", "mcp_server.py"]
+args = ["run", "pykeycloak-mcp"]
 cwd = "path/to/PyKeycloak"
 
 [mcp_servers.pykeycloak.env]
@@ -55,7 +55,7 @@ Set `cwd` to your local repository path.
 ```toml
 [mcp_servers.pykeycloak]
 command = "uv"
-args = ["run", "python", "mcp_server.py"]
+args = ["run", "pykeycloak-mcp"]
 cwd = "path/to/PyKeycloak"
 
 [mcp_servers.pykeycloak.env]
@@ -70,7 +70,7 @@ KEYCLOAK_BASE_URL = "http://127.0.0.1:8080"
   "mcpServers": {
     "pykeycloak": {
       "command": "uv",
-      "args": ["run", "python", "mcp_server.py"],
+      "args": ["run", "pykeycloak-mcp"],
       "cwd": "path/to/PyKeycloak",
       "env": {
         "MCP_TRANSPORT": "stdio",
@@ -88,7 +88,7 @@ KEYCLOAK_BASE_URL = "http://127.0.0.1:8080"
   "mcpServers": {
     "pykeycloak": {
       "command": "uv",
-      "args": ["run", "python", "mcp_server.py"],
+      "args": ["run", "pykeycloak-mcp"],
       "cwd": "path/to/PyKeycloak",
       "env": {
         "MCP_TRANSPORT": "stdio",
@@ -106,7 +106,7 @@ KEYCLOAK_BASE_URL = "http://127.0.0.1:8080"
   "mcpServers": {
     "pykeycloak": {
       "command": "uv",
-      "args": ["run", "python", "mcp_server.py"],
+      "args": ["run", "pykeycloak-mcp"],
       "cwd": "path/to/PyKeycloak",
       "env": {
         "MCP_TRANSPORT": "stdio",
@@ -124,7 +124,7 @@ KEYCLOAK_BASE_URL = "http://127.0.0.1:8080"
   "mcpServers": {
     "pykeycloak": {
       "command": "uv",
-      "args": ["run", "python", "mcp_server.py"],
+      "args": ["run", "pykeycloak-mcp"],
       "cwd": "path/to/PyKeycloak",
       "env": {
         "MCP_TRANSPORT": "stdio",
