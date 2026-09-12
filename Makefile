@@ -19,6 +19,7 @@ ifneq ($(wildcard .env.kc),)
 endif
 
 ENV_FILE_OPTION := $(foreach f,$(APP_ENV_FILES),--env-file $f)
+LOG_CONFIG_OPTION := $(if $(wildcard log_conf.yaml),--log-config=log_conf.yaml,)
 
 UV_RUN := make set-python-version;\
 	PYTHONPATH=src:examples uv run
@@ -73,7 +74,7 @@ clean: ## Remove .pyc files and pre-commit cache
 # Run App
 # ========================
 run: ## Run app using uvicorn for local dev
-	@$(load_env); $(UV_RUN) uvicorn src.api.app:app --reload --log-config=log_conf.yaml --port=8101
+	@$(load_env); $(UV_RUN) uvicorn src.api.app:app --reload $(LOG_CONFIG_OPTION) --port=8101
 
 script-%:
 	$(load_env); $(UV_RUN) $*

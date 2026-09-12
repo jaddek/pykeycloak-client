@@ -270,4 +270,8 @@ def get_keycloak_http_client_from_env() -> KeycloakHttpClientAsync:
 
 
 if TYPE_CHECKING:
-    _ksfp: KeycloakServiceFactoryProtocol = type[KeycloakServiceFactory]
+
+    def _typecheck_factory(
+        factory: KeycloakServiceFactory,
+    ) -> KeycloakServiceFactoryProtocol:
+        return factory

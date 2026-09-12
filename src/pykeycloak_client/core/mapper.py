@@ -8,6 +8,7 @@ from types import UnionType
 from typing import (
     Any,
     Union,
+    cast,
     get_args,
     get_origin,
     get_type_hints,
@@ -94,7 +95,8 @@ class PyKeycloakDataMapper:
         hints = get_type_hints(target_cls, localns=local_ns)
 
         field_configs = []
-        for f in fields(target_cls):
+        dataclass_cls = cast(Any, target_cls)
+        for f in fields(dataclass_cls):
             f_type = hints.get(f.name, f.type)
             field_configs.append(
                 (
